@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:keep_notes/database_helper.dart';
+import 'package:keep_notes/update_user.dart';
 // video stopped at 11:40 on truecoders pending edit functionality;
 void main() {
   runApp(const MyApp());
@@ -57,6 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
    dataList= updatedData;
  });
   }
+  void fetchData() async {
+    List<Map<String, dynamic>> fetchedData= await DatabaseHelper.getData();
+    setState(() {
+      dataList= fetchedData;
+    });
+  }
   @override
   void initState() {
     _fetchUsers();
@@ -97,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(onPressed: _saveData, child: const Text('Save Data',),),
                 ],
               ),
-              const SizedBox(
+               const SizedBox(
                 height: 20,
               ),
               Expanded(
@@ -107,11 +114,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     return ListTile(
                       title: Text('Name: ${dataList[index]['name']}'),
                       subtitle: Text('Age: ${dataList[index]['age']}'),
-                      trailing: IconButton(onPressed: (){
-                        _delete(dataList[index]['id']);
-                      }, icon: const Icon(Icons.delete_outline, color: Colors.red,),),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(onPressed: (){
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => UpdateUser(userId:  dataList[index]['id']),),).then((value){
+                                if(value==true){
+                                  fetchData();
+                                }
+                                
+                              });
+                          }, icon: const Icon(Icons.edit_outlined),),
+                           IconButton(onPressed: (){
+                            _delete(dataList[index]['id']);
+                          }, icon: const Icon(Icons.delete_outline, color: Colors.red,),),
+                        ],
+                      ),
                     );
-                  },),),
+                  },
+                  ),
+                  ),
             ],
           ),
         ),
