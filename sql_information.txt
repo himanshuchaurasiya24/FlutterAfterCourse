@@ -12,8 +12,8 @@ in sql we generally use this command for inserting the data
 
 insert into student values (1, 'Himanshu');
 
-but if we dont know the command then this can give us an error;
-so to avoid this we can use the followin command by specifing the position of the column like
+but if we dont know the order of the data to be given then this can give us an error;
+so to avoid this we can use the following command by specifying the position of the column like
 
 insert into student 
 (rollno, name)
