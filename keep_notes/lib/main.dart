@@ -99,8 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   TextFormField(
                     controller: _ageController,
+                    keyboardType: const TextInputType.numberWithOptions(),
                     decoration: const InputDecoration(
                       hintText: 'Age'
+
                     ),
                   ),
                   ElevatedButton(onPressed: _saveData, child: const Text('Save Data',),),

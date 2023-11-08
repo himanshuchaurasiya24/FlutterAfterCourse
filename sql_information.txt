@@ -67,6 +67,16 @@ select * from student where city='delhi' or  marks>20 or rollno >104;// watches 
 select * from student where marks between 80 and 90; // 80 and 90 are inclusive;
 select * from student where city in ('delhi', 'mumbai');
 select * from student where city not in ('delhi', 'mumbai'); // finds the data where city name is not equal to the given list;
+select * from student order by name desc;// descending order;
+
+aggregate functions in sql are-> count(), sum(), max(), avg(), min()
+
+select min(marks) from student; displays min marks of student in the list;
+select city, count(rollno) from student group by city; this show
+here in city it can be used to group by city and name as well but we have to write it on both the placs like
+select city,name, count(rollno) from student group by city, name;
+
+1:37 
 
 
 
