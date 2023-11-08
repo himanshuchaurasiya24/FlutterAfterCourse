@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:keep_notes/database_helper.dart';
+import 'package:keep_notes/database_service.dart';
 import 'package:keep_notes/update_user.dart';
 // video stopped at 11:40 on truecoders pending edit functionality;
 void main() {
@@ -36,9 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void _saveData() async {
     final name = _nameController.text;
     final age = int.tryParse(_ageController.text)??0;
-    int insertId = await DatabaseHelper.insertUser(name, age);
+    int insertId = await SQFLite.insertUser(name, age);
     print(insertId);
-    List<Map<String, dynamic>> updatedData=await  DatabaseHelper.getData();
+    List<Map<String, dynamic>> updatedData=await  SQFLite.getData();
     setState(() {
       dataList= updatedData;
     });
@@ -46,20 +46,20 @@ class _MyHomePageState extends State<MyHomePage> {
     _ageController.text= '';
   }
   void _fetchUsers() async {
-    List<Map<String , dynamic>> userList = await DatabaseHelper.getData();
+    List<Map<String , dynamic>> userList = await SQFLite.getData();
     setState(() {
       dataList= userList;
     });
   }
   void _delete(int docId) async {
- await DatabaseHelper.deleteData(docId);
- List<Map<String, dynamic>> updatedData= await DatabaseHelper.getData();
+ await SQFLite.deleteData(docId);
+ List<Map<String, dynamic>> updatedData= await SQFLite.getData();
  setState(() {
    dataList= updatedData;
  });
   }
   void fetchData() async {
-    List<Map<String, dynamic>> fetchedData= await DatabaseHelper.getData();
+    List<Map<String, dynamic>> fetchedData= await SQFLite.getData();
     setState(() {
       dataList= fetchedData;
     });
@@ -67,6 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _fetchUsers();
+    SQFLite.initWinDB();
+    WidgetsFlutterBinding.ensureInitialized();
     super.initState();
   }
   @override

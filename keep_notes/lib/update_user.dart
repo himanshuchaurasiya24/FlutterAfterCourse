@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../database_helper.dart';
+import 'package:keep_notes/database_service.dart';
 class UpdateUser extends StatefulWidget {
   const UpdateUser({super.key, required this.userId});
 final int userId;
@@ -11,7 +11,7 @@ class _UpdateUserState extends State<UpdateUser> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
 void fetchData() async {
-  Map<String, dynamic>? data = await DatabaseHelper.getSingleData(widget.userId);
+  Map<String, dynamic>? data = await SQFLite.getSingleData(widget.userId);
   if(data!=null){
     _nameController.text= data['name'];
     _ageController.text= data['age'].toString();
@@ -33,7 +33,7 @@ void fetchData() async {
       'name':_nameController.text,
       'age':_ageController.text,
     };
-     await DatabaseHelper.updateData(widget.userId, data);
+     await SQFLite.updateData(widget.userId, data);
     Navigator.pop(context, true);
   }
   @override
