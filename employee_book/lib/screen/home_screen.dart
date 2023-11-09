@@ -69,7 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(employee.userName),
@@ -78,11 +81,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(dateOfBirth(employee.dateOfBirth)),
                     ],
                   ),
+                  IconButton(onPressed:(){
+                    _db.deleteEmployee(employee.id);
+                    setState(() {
+                      
+                    });
+                  }, icon: const Icon(Icons.delete_outlined),),
+                    ],
+                  )
                 ),
               ),
             );
           },itemCount: employees.length,);
         }
+        
         return const Center(child: Text('No Data To Display'),);
       },
       ),
@@ -96,4 +108,5 @@ class _HomeScreenState extends State<HomeScreen> {
       }, label: const Text('Add Employee'), icon: const Icon(Icons.add_outlined),),
     );
   }
+ 
 }

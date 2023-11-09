@@ -180,7 +180,7 @@ final _formKey = GlobalKey<FormState>();
     _lastNameController.text= _employeeData.lastName;
     _dateOfBirthNameController.text= DateFormat('dd/MM/yyyy').format(_employeeData.dateOfBirth);
 
-    _dateOfBirth= DateTime.parse(_dateOfBirthNameController.text);
+    _dateOfBirth = DateTime.parse(_employeeData.dateOfBirth.toString());
   }
 }
 
