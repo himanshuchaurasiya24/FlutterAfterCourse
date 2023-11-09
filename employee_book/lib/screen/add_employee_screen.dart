@@ -18,6 +18,7 @@ final   TextEditingController _firstNameController = TextEditingController();
 final   TextEditingController _lastNameController = TextEditingController();
 final   TextEditingController _dateOfBirthNameController = TextEditingController();
 DateTime? _dateOfBirth;
+final _formKey = GlobalKey<FormState>(); 
 @override
   void initState() {
     super.initState();
@@ -42,7 +43,11 @@ DateTime? _dateOfBirth;
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            CustomTextFormField(controller: _usernameController, txtlable: 'username',),
+            Form(
+              key: _formKey,
+              child: Column(
+              children: [
+                CustomTextFormField(controller: _usernameController, txtlable: 'username',),
             const SizedBox(
               height: 8.0,
             ),
@@ -57,9 +62,9 @@ DateTime? _dateOfBirth;
             CustomDatePickerFormField(callBack: (){
               pickDateOfBirth(context);
             }, controller: _dateOfBirthNameController, txtLabel: 'Date of Birth'),
-            const SizedBox(
-              height: 8.0,
-            ),
+            
+              ],
+            ),),
             
           ],
         ),
@@ -96,16 +101,27 @@ DateTime? _dateOfBirth;
     
   }
   void addEmployee(){
-        final entity = EmployeeCompanion(
+    final isValid= _formKey.currentState?.validate();
+
+    if(isValid!=null&&isValid){
+      final entity = EmployeeCompanion(
           userName: drift.Value(_usernameController.text),
           firstName: drift.Value(_firstNameController.text),
           lastName: drift.Value(_lastNameController.text),
           dateOfBirth: drift.Value(_dateOfBirth!),
         );
-        _db.insertEmployee(entity).then((value) => ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(content:  Text('New Employee $value Added'), actions: [TextButton(onPressed: (){
+        _db.insertEmployee(entity).then((value) => ScaffoldMessenger.of(context)
+        .showMaterialBanner(
+          MaterialBanner(
+          content:  Text('New Employee $value Added'), 
+          actions: [TextButton(onPressed: (){
            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-           Navigator.of(context).pop(1);
+           Navigator.of(context).pop(value);
          
         }, child: const Text('OK'))])));
+    }else{
+      'Some field might be null. Please check it.';
+    }
+        
   }
 }

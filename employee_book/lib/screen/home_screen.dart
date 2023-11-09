@@ -45,14 +45,40 @@ class _HomeScreenState extends State<HomeScreen> {
         if(employees!=null){
           return ListView.builder(itemBuilder: (context, index) {
             final employee= employees[index];
-            return Card(
-              child: Column(
-                children: [
-                  Text(employee.userName),
-                  Text(employee.firstName),
-                  Text(employee.lastName),
-                  Text(dateOfBirth(employee.dateOfBirth)),
-                ],
+            return GestureDetector(
+              onTap: (){
+                // to navigate to edit screen;
+                Navigator.pushNamed(context, '/edit_employee', arguments: employee.id).then((value) {
+                  
+          
+                  setState(() {
+                    
+                  });
+                });
+              },
+              child: Card(
+                
+                color: const  Color.fromARGB(255, 243, 137, 129),
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(
+                    color: Colors.red,
+                    style: BorderStyle.solid,
+                    width: 1.2
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(employee.userName),
+                      Text(employee.firstName),
+                      Text(employee.lastName),
+                      Text(dateOfBirth(employee.dateOfBirth)),
+                    ],
+                  ),
+                ),
               ),
             );
           },itemCount: employees.length,);
@@ -62,11 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(onPressed: (){
         Navigator.pushNamed(context, '/add_employee').then((value) {
-          if(value==1){
-            setState(() {
-              
-            });
-          }
+          setState(() {
+            
+          });
+          
         });
       }, label: const Text('Add Employee'), icon: const Icon(Icons.add_outlined),),
     );
