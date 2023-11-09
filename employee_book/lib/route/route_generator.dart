@@ -8,7 +8,7 @@ class RouteGenerator{
   static Route<dynamic> generateRoute(RouteSettings settings){
     switch(settings.name){
       case '/':
-      return MaterialPageRoute(builder: (_)=> const HomeScreen(),);
+      return MaterialPageRoute(builder: (_)=>  HomeScreen(),);
       case '/add_employee':
       return MaterialPageRoute(builder: (_)=> const AddEmployeeScreen(),);
       default: 

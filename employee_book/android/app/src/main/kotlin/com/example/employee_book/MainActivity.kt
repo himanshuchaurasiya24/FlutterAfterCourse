@@ -1,4 +1,4 @@
-package com.himanshu.employee_book
+package com.example.employee_book
 
 import io.flutter.embedding.android.FlutterActivity
 

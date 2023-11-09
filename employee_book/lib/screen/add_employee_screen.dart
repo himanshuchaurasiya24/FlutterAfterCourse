@@ -1,8 +1,9 @@
+import 'package:employee_book/local/db/app_db.dart';
 import 'package:employee_book/widget/custom_date_picker_form_field.dart';
 import 'package:employee_book/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:drift/drift.dart' as drift;
 class AddEmployeeScreen extends StatefulWidget {
   const AddEmployeeScreen({super.key});
 
@@ -11,16 +12,31 @@ class AddEmployeeScreen extends StatefulWidget {
 }
 
 class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+  late AppDb _db;
 final   TextEditingController _usernameController = TextEditingController();
 final   TextEditingController _firstNameController = TextEditingController();
 final   TextEditingController _lastNameController = TextEditingController();
 final   TextEditingController _dateOfBirthNameController = TextEditingController();
 DateTime? _dateOfBirth;
+@override
+  void initState() {
+    super.initState();
+    _db= AppDb();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    _usernameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _dateOfBirthNameController.dispose();
+    _db.close();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Add Employee'),centerTitle: true,actions: [IconButton(onPressed: (){
-        // todo something
+        addEmployee();
       }, icon: const Icon(Icons.save_outlined),)],),
       body:Padding(
         padding: const EdgeInsets.all(8.0),
@@ -69,10 +85,27 @@ DateTime? _dateOfBirth;
     }
     setState(() {
       var dob = DateFormat('dd/MM/yyyy').format(newDate);
-      _dateOfBirth=newDate;
+      if(_dateOfBirth!=null){
+        _dateOfBirth=newDate;
+      }
+      else{
+        _dateOfBirth= DateTime.now();
+      }
       _dateOfBirthNameController.text= dob;
     });
     
   }
-  
+  void addEmployee(){
+        final entity = EmployeeCompanion(
+          userName: drift.Value(_usernameController.text),
+          firstName: drift.Value(_firstNameController.text),
+          lastName: drift.Value(_lastNameController.text),
+          dateOfBirth: drift.Value(_dateOfBirth!),
+        );
+        _db.insertEmployee(entity).then((value) => ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(content:  Text('New Employee $value Added'), actions: [TextButton(onPressed: (){
+           ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+           Navigator.of(context).pop(1);
+         
+        }, child: const Text('OK'))])));
+  }
 }
