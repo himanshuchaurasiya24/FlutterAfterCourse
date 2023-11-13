@@ -1,4 +1,5 @@
 import 'package:employee_book/local/db/app_db.dart';
+import 'package:employee_book/notifier/employee_change_notifier.dart';
 import 'package:employee_book/widget/custom_date_picker_form_field.dart';
 import 'package:employee_book/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +19,13 @@ final   TextEditingController _firstNameController = TextEditingController();
 final   TextEditingController _lastNameController = TextEditingController();
 final   TextEditingController _dateOfBirthNameController = TextEditingController();
 DateTime? _dateOfBirth;
+late EmployeeChangeNotifier _employeeChangeNotifier;
+
 final _formKey = GlobalKey<FormState>(); 
 @override
   void initState() {
+    _employeeChangeNotifier= Provider.of<EmployeeChangeNotifier>(context, listen: false);
+  _employeeChangeNotifier.addListener(providerListener);
     super.initState();
   }
   @override
@@ -29,6 +34,7 @@ final _formKey = GlobalKey<FormState>();
     _usernameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _employeeChangeNotifier.dispose();
     _dateOfBirthNameController.dispose();
   }
   @override
@@ -111,18 +117,32 @@ final _formKey = GlobalKey<FormState>();
           lastName: drift.Value(_lastNameController.text),
           dateOfBirth: drift.Value(_dateOfBirth!),
         );
-       Provider.of<AppDb>(context, listen: false).insertEmployee(entity).then((value) => ScaffoldMessenger.of(context)
-        .showMaterialBanner(
-          MaterialBanner(
-          content:  Text('New Employee $value Added'), 
-          actions: [TextButton(onPressed: (){
-           ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-           Navigator.of(context).pop(value);
+        context.read<EmployeeChangeNotifier>().createEmployee(entity);
+        
+      //  Provider.of<AppDb>(context, listen: false).insertEmployee(entity).then((value) =>
+      //   ScaffoldMessenger.of(context)
+      //   .showMaterialBanner(
+      //     MaterialBanner(
+      //     content:  Text('New Employee $value Added'), 
+      //     actions: [TextButton(onPressed: (){
+      //      ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      //      Navigator.of(context).pop(value);
          
-        }, child: const Text('OK'))])));
+      //   }, child: const Text('OK'))])));
     }else{
       'Some field might be null. Please check it.';
-    }
-        
+    }   
   }
+  void providerListener(){
+         if(_employeeChangeNotifier.isAdded){
+            ScaffoldMessenger.of(context)
+        .showMaterialBanner(
+          MaterialBanner(
+          content:  const Text('New Employee Added'), 
+          actions: [TextButton(onPressed: (){
+           ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+           Navigator.of(context).pop(true);
+        }, child: const Text('OK'))]));
+         }
+        }
 }

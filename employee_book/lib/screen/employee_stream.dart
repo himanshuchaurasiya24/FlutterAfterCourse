@@ -1,4 +1,8 @@
+
+
+
 import 'package:employee_book/local/db/app_db.dart';
+import 'package:employee_book/notifier/employee_change_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -24,34 +28,35 @@ class _EmployeeStreamState extends State<EmployeeStream> {
   }
   @override
   Widget build(BuildContext context) {
+    debugPrint('build Context called');
+    // final employees = context.select<EmployeeChangeNotifier, List<EmployeeData>>((notifier)=>notifier.employeeListFuture);
+    final isLoading = context.select<EmployeeChangeNotifier, bool>((notifier)=>notifier.isLoading);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Employee Stream'),
       centerTitle: true,
       ),
-     
-      body: FutureBuilder<List<EmployeeData>>(future: Provider.of<AppDb>(context).getEmployees(),
-      builder: (context, snapshot) {
-        final List<EmployeeData>? employees= snapshot.data;
-        if(snapshot.connectionState!=ConnectionState.done){
-          return const  Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if(snapshot.hasError){
-          return  Center(
-            child: Text(snapshot.error.toString()),
-          );
-        }
-        if(employees!=null){
-          return ListView.builder(itemBuilder: (context, index) {
+      body: isLoading?
+      const Center(
+        child: CircularProgressIndicator(),
+      ):
+           Selector<EmployeeChangeNotifier, List<EmployeeData>>(
+            selector: (context, notifier){
+              return notifier.employeeListFuture;
+            },
+            builder: (context, employees, child) {
+             return ListView.builder(itemBuilder: (context, index) {
             final employee= employees[index];
             return GestureDetector(
               onTap: (){
                 // to navigate to edit screen;
-                Navigator.pushNamed(context, '/edit_employee', arguments: employee.id).then((value) {
-                  setState(() {
+                Navigator.pushNamed(context, '/edit_employee', arguments: employee.id).
+                then((value) {
+                  if(value==true){
+                    setState(() {
                     
                   });
+                  }
                 });
               },
               child: Card(
@@ -84,14 +89,11 @@ class _EmployeeStreamState extends State<EmployeeStream> {
                 ),
               ),
             );
-          },itemCount: employees.length,);
-        }
-        
-        return const Center(child: Text('No Data To Display'),);
-      },
-      ),
-      
-    );
+          },
+          itemCount:employees.length,
+          );
+           },)
+          );
   }
  
 }

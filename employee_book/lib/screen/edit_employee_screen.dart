@@ -1,4 +1,5 @@
 import 'package:employee_book/local/db/app_db.dart';
+import 'package:employee_book/notifier/employee_change_notifier.dart';
 import 'package:employee_book/widget/custom_date_picker_form_field.dart';
 import 'package:employee_book/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,17 @@ final   TextEditingController _firstNameController = TextEditingController();
 final   TextEditingController _lastNameController = TextEditingController();
 final   TextEditingController _dateOfBirthNameController = TextEditingController();
 DateTime? _dateOfBirth;
+late EmployeeChangeNotifier _employeeChangeNotifier;
+
 
 final _formKey = GlobalKey<FormState>(); 
 
 @override
   void initState() {
+    _employeeChangeNotifier= Provider.of<EmployeeChangeNotifier>(context, listen: false);
+    _employeeChangeNotifier.addListener(
+      providerListener
+    );
     super.initState();
    getEmployee();
     
@@ -34,6 +41,7 @@ final _formKey = GlobalKey<FormState>();
     _usernameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _employeeChangeNotifier.dispose();
     _dateOfBirthNameController.dispose();
   }
   @override
@@ -120,25 +128,28 @@ final _formKey = GlobalKey<FormState>();
   void deleteEmployee() {
     final isValid = _formKey.currentState?.validate();
     if(isValid!=null&&isValid){
-      Provider.of<AppDb>(context, listen: false).deleteEmployee(widget.id).then(
-          (value) { 
-              ScaffoldMessenger.of(context)
-           .hideCurrentMaterialBanner(); 
-                 ScaffoldMessenger.of(context)
-        .showMaterialBanner(MaterialBanner(
-          content:  Text(value==1?'Deletion: Successful':'Deletion Failed'), 
-          actions: [TextButton(onPressed: (){
-           ScaffoldMessenger.of(context)
-           .hideCurrentMaterialBanner();  
+      context.read<EmployeeChangeNotifier>().deleteEmployee(widget.id);
+
+    //   Provider.of<AppDb>(context, listen: false).deleteEmployee(widget.id).then(
+    //       (value) { 
+    //           ScaffoldMessenger.of(context)
+    //        .hideCurrentMaterialBanner(); 
+    //              ScaffoldMessenger.of(context)
+    //     .showMaterialBanner(MaterialBanner(
+    //       content:  Text(value==1?'Deletion: Successful':'Deletion Failed'), 
+    //       actions: [TextButton(onPressed: (){
+    //        ScaffoldMessenger.of(context)
+    //        .hideCurrentMaterialBanner();  
            
-            Navigator.of(context).pop(value);       
+    //         Navigator.of(context).pop(value);       
          
-        }, child: const Text('OK'))]));
-    });
+    //     }, child: const Text('OK'))]));
+    // });
     }else{
       'Some field might be null. Please check it.';
     }
   }
+ 
   void updateEmployee(){
        final isValid = _formKey.currentState?.validate();
        if(isValid!=null&&isValid){
@@ -149,28 +160,62 @@ final _formKey = GlobalKey<FormState>();
           lastName: drift.Value(_lastNameController.text),
           dateOfBirth: drift.Value(_dateOfBirth!),
         );
-        Provider.of<AppDb>(context, listen: false).updateEmployee(entity).then(
-          (value) { 
-             ScaffoldMessenger.of(context)
-           .hideCurrentMaterialBanner(); 
-                 ScaffoldMessenger.of(context)
-        .showMaterialBanner(MaterialBanner(
-          content:  Text('Updating data: $value'), 
-          actions: [TextButton(onPressed: (){
-           ScaffoldMessenger.of(context)
-           .hideCurrentMaterialBanner();  
+        context.read<EmployeeChangeNotifier>().updateEmployee(entity);
+        // Provider.of<AppDb>(context, listen: false).updateEmployee(entity).then(
+        //   (value) { 
+        //      ScaffoldMessenger.of(context)
+        //    .hideCurrentMaterialBanner(); 
+        //          ScaffoldMessenger.of(context)
+        // .showMaterialBanner(MaterialBanner(
+        //   content:  Text('Updating data: $value'), 
+        //   actions: [TextButton(onPressed: (){
+        //    ScaffoldMessenger.of(context)
+        //    .hideCurrentMaterialBanner();  
            
-            Navigator.of(context).pop(value);       
+        //     Navigator.of(context).pop(value);       
          
-        }, child: const Text('OK'))]));
-            });
+        // }, child: const Text('OK'))]));
+        //     });
        }
        else{
         'Some field might be null. Please check it.';
        }
-
-
   }
+   void providerDeleteListener(){
+    ScaffoldMessenger.of(context)
+           .hideCurrentMaterialBanner(); 
+                 ScaffoldMessenger.of(context)
+        .showMaterialBanner(MaterialBanner(
+          content:  const Text('Deletion: Successful'), 
+          actions: [TextButton(onPressed: (){
+           ScaffoldMessenger.of(context)
+           .hideCurrentMaterialBanner();  
+            Navigator.of(context).pop(true);  
+        }, child: const Text('OK'))]));
+  }
+  void providerUpdateListener(){
+    ScaffoldMessenger.of(context)
+           .hideCurrentMaterialBanner(); 
+                 ScaffoldMessenger.of(context)
+        .showMaterialBanner(MaterialBanner(
+          content:  const Text('Updating data'), 
+          actions: [TextButton(onPressed: (){
+           ScaffoldMessenger.of(context)
+           .hideCurrentMaterialBanner();  
+           
+            Navigator.of(context).pop(true);       
+         
+        }, child: const Text('OK'))]));
+            }
+void providerListener(){
+  if(_employeeChangeNotifier.isAdded){
+    providerUpdateListener();
+  }
+  if(_employeeChangeNotifier.isDeleted){
+    providerDeleteListener();
+  }
+              
+            }
   Future<void> getEmployee() async{
     _employeeData= await Provider.of<AppDb>(context, listen: false).getEmployee(widget.id);
     _usernameController.text= _employeeData.userName;

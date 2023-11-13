@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
    MultiProvider(
     providers: [
       Provider.value(value: AppDb()),
-      ChangeNotifierProxyProvider<AppDb, EmployeeChangeNotifier>(create: (context) {
+      ChangeNotifierProxyProvider<AppDb,
+       EmployeeChangeNotifier>(create: (context) {
         return EmployeeChangeNotifier();
       }, 
       update: (context, db, notifier) =>
