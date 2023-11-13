@@ -1,6 +1,7 @@
 import 'package:employee_book/local/db/app_db.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 class EmployeeFuture extends StatefulWidget {
    const EmployeeFuture({super.key});
 
@@ -9,18 +10,16 @@ class EmployeeFuture extends StatefulWidget {
 }
 
 class _EmployeeFutureState extends State<EmployeeFuture> {
-  late AppDb _db;
+
   String dateOfBirth(DateTime dateTime){
     return DateFormat('dd/MM/yyyy').format(dateTime);
   }
   @override
   void initState() {
     super.initState();
-  _db= AppDb();
   }
   @override
   void dispose() {
-    _db.close();
     super.dispose();
   }
   @override
@@ -30,7 +29,9 @@ class _EmployeeFutureState extends State<EmployeeFuture> {
       centerTitle: true,
       ),
      
-      body: FutureBuilder<List<EmployeeData>>(future: _db.getEmployees(),builder: (context, snapshot) {
+      
+      body: FutureBuilder<List<EmployeeData>>(future: Provider.of<AppDb>(context).getEmployees(),
+      builder: (context, snapshot) {
         final List<EmployeeData>? employees= snapshot.data;
         if(snapshot.connectionState!=ConnectionState.done){
           return const  Center(
@@ -78,18 +79,17 @@ class _EmployeeFutureState extends State<EmployeeFuture> {
                       Text(dateOfBirth(employee.dateOfBirth)),
                     ],
                   ),
-                  IconButton(onPressed:(){
-                    _db.deleteEmployee(employee.id);
-                    setState(() {
-                      
-                    });
-                  }, icon: const Icon(Icons.delete_outlined),),
+              
                     ],
                   )
                 ),
               ),
             );
           },itemCount: employees.length,);
+        }
+        if(employees!=null&&employees.isEmpty){
+          
+        return const Center(child: Text('No Data To Display'),);
         }
         
         return const Center(child: Text('No Data To Display'),);

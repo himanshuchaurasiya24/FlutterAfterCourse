@@ -4,6 +4,7 @@ import 'package:employee_book/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:provider/provider.dart';
 class AddEmployeeScreen extends StatefulWidget {
   const AddEmployeeScreen({super.key});
 
@@ -12,7 +13,6 @@ class AddEmployeeScreen extends StatefulWidget {
 }
 
 class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
-  late AppDb _db;
 final   TextEditingController _usernameController = TextEditingController();
 final   TextEditingController _firstNameController = TextEditingController();
 final   TextEditingController _lastNameController = TextEditingController();
@@ -22,7 +22,6 @@ final _formKey = GlobalKey<FormState>();
 @override
   void initState() {
     super.initState();
-    _db= AppDb();
   }
   @override
   void dispose() {
@@ -31,14 +30,16 @@ final _formKey = GlobalKey<FormState>();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _dateOfBirthNameController.dispose();
-    _db.close();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Employee'),centerTitle: true,actions: [IconButton(onPressed: (){
+      appBar: AppBar(title: const Text('Add Employee'),centerTitle: true,actions: 
+      [
+        IconButton(onPressed: (){
         addEmployee();
-      }, icon: const Icon(Icons.save_outlined),)],),
+      },
+      icon: const Icon(Icons.save_outlined),)],),
       body:Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -110,7 +111,7 @@ final _formKey = GlobalKey<FormState>();
           lastName: drift.Value(_lastNameController.text),
           dateOfBirth: drift.Value(_dateOfBirth!),
         );
-        _db.insertEmployee(entity).then((value) => ScaffoldMessenger.of(context)
+       Provider.of<AppDb>(context, listen: false).insertEmployee(entity).then((value) => ScaffoldMessenger.of(context)
         .showMaterialBanner(
           MaterialBanner(
           content:  Text('New Employee $value Added'), 

@@ -1,6 +1,7 @@
 import 'package:employee_book/local/db/app_db.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 class EmployeeStream extends StatefulWidget {
    const EmployeeStream({super.key});
 
@@ -9,18 +10,16 @@ class EmployeeStream extends StatefulWidget {
 }
 
 class _EmployeeStreamState extends State<EmployeeStream> {
-  late AppDb _db;
+
   String dateOfBirth(DateTime dateTime){
     return DateFormat('dd/MM/yyyy').format(dateTime);
   }
   @override
   void initState() {
     super.initState();
-  _db= AppDb();
   }
   @override
   void dispose() {
-    _db.close();
     super.dispose();
   }
   @override
@@ -30,7 +29,8 @@ class _EmployeeStreamState extends State<EmployeeStream> {
       centerTitle: true,
       ),
      
-      body: FutureBuilder<List<EmployeeData>>(future: _db.getEmployees(),builder: (context, snapshot) {
+      body: FutureBuilder<List<EmployeeData>>(future: Provider.of<AppDb>(context).getEmployees(),
+      builder: (context, snapshot) {
         final List<EmployeeData>? employees= snapshot.data;
         if(snapshot.connectionState!=ConnectionState.done){
           return const  Center(
@@ -78,12 +78,7 @@ class _EmployeeStreamState extends State<EmployeeStream> {
                       Text(dateOfBirth(employee.dateOfBirth)),
                     ],
                   ),
-                  IconButton(onPressed:(){
-                    _db.deleteEmployee(employee.id);
-                    setState(() {
-                      
-                    });
-                  }, icon: const Icon(Icons.delete_outlined),),
+              
                     ],
                   )
                 ),

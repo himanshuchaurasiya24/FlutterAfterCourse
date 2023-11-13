@@ -4,6 +4,7 @@ import 'package:employee_book/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:provider/provider.dart';
 class EditEmployeeScreen extends StatefulWidget {
   const EditEmployeeScreen({required this.id,super.key});
 final int id;
@@ -13,7 +14,6 @@ final int id;
 
 class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   late EmployeeData _employeeData; 
-  late AppDb _db;
 final   TextEditingController _usernameController = TextEditingController();
 final   TextEditingController _firstNameController = TextEditingController();
 final   TextEditingController _lastNameController = TextEditingController();
@@ -25,7 +25,6 @@ final _formKey = GlobalKey<FormState>();
 @override
   void initState() {
     super.initState();
-    _db = AppDb();
    getEmployee();
     
   }
@@ -36,7 +35,6 @@ final _formKey = GlobalKey<FormState>();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _dateOfBirthNameController.dispose();
-    _db.close();
   }
   @override
   Widget build(BuildContext context) {
@@ -122,7 +120,7 @@ final _formKey = GlobalKey<FormState>();
   void deleteEmployee() {
     final isValid = _formKey.currentState?.validate();
     if(isValid!=null&&isValid){
-      _db.deleteEmployee(widget.id).then(
+      Provider.of<AppDb>(context, listen: false).deleteEmployee(widget.id).then(
           (value) { 
               ScaffoldMessenger.of(context)
            .hideCurrentMaterialBanner(); 
@@ -151,7 +149,7 @@ final _formKey = GlobalKey<FormState>();
           lastName: drift.Value(_lastNameController.text),
           dateOfBirth: drift.Value(_dateOfBirth!),
         );
-        _db.updateEmployee(entity).then(
+        Provider.of<AppDb>(context, listen: false).updateEmployee(entity).then(
           (value) { 
              ScaffoldMessenger.of(context)
            .hideCurrentMaterialBanner(); 
@@ -174,7 +172,7 @@ final _formKey = GlobalKey<FormState>();
 
   }
   Future<void> getEmployee() async{
-    _employeeData= await _db.getEmployee(widget.id);
+    _employeeData= await Provider.of<AppDb>(context, listen: false).getEmployee(widget.id);
     _usernameController.text= _employeeData.userName;
     _firstNameController.text= _employeeData.firstName;
     _lastNameController.text= _employeeData.lastName;

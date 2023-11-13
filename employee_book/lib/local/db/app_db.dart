@@ -34,4 +34,5 @@ class AppDb extends _$AppDb{
   Future<int> deleteEmployee(int id) async{
     return await (delete(employee)..where((tbl) => tbl.id.equals(id))).go();
   }
+   
 }
