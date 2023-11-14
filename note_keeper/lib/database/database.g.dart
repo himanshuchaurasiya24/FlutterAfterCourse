@@ -28,6 +28,11 @@ class $NoteTable extends Note with TableInfo<$NoteTable, NoteData> {
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+      'date', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _priorityMeta =
       const VerificationMeta('priority');
   @override
@@ -41,7 +46,7 @@ class $NoteTable extends Note with TableInfo<$NoteTable, NoteData> {
       type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, title, description, priority, color];
+      [id, title, description, date, priority, color];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -69,6 +74,12 @@ class $NoteTable extends Note with TableInfo<$NoteTable, NoteData> {
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
     if (data.containsKey('priority')) {
       context.handle(_priorityMeta,
           priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta));
@@ -92,6 +103,8 @@ class $NoteTable extends Note with TableInfo<$NoteTable, NoteData> {
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}date'])!,
       priority: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}priority']),
       color: attachedDatabase.typeMapping
@@ -109,12 +122,14 @@ class NoteData extends DataClass implements Insertable<NoteData> {
   final int id;
   final String title;
   final String description;
+  final String date;
   final int? priority;
   final int? color;
   const NoteData(
       {required this.id,
       required this.title,
       required this.description,
+      required this.date,
       this.priority,
       this.color});
   @override
@@ -123,6 +138,7 @@ class NoteData extends DataClass implements Insertable<NoteData> {
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
     map['description'] = Variable<String>(description);
+    map['date'] = Variable<String>(date);
     if (!nullToAbsent || priority != null) {
       map['priority'] = Variable<int>(priority);
     }
@@ -137,6 +153,7 @@ class NoteData extends DataClass implements Insertable<NoteData> {
       id: Value(id),
       title: Value(title),
       description: Value(description),
+      date: Value(date),
       priority: priority == null && nullToAbsent
           ? const Value.absent()
           : Value(priority),
@@ -152,6 +169,7 @@ class NoteData extends DataClass implements Insertable<NoteData> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String>(json['description']),
+      date: serializer.fromJson<String>(json['date']),
       priority: serializer.fromJson<int?>(json['priority']),
       color: serializer.fromJson<int?>(json['color']),
     );
@@ -163,6 +181,7 @@ class NoteData extends DataClass implements Insertable<NoteData> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String>(description),
+      'date': serializer.toJson<String>(date),
       'priority': serializer.toJson<int?>(priority),
       'color': serializer.toJson<int?>(color),
     };
@@ -172,12 +191,14 @@ class NoteData extends DataClass implements Insertable<NoteData> {
           {int? id,
           String? title,
           String? description,
+          String? date,
           Value<int?> priority = const Value.absent(),
           Value<int?> color = const Value.absent()}) =>
       NoteData(
         id: id ?? this.id,
         title: title ?? this.title,
         description: description ?? this.description,
+        date: date ?? this.date,
         priority: priority.present ? priority.value : this.priority,
         color: color.present ? color.value : this.color,
       );
@@ -187,6 +208,7 @@ class NoteData extends DataClass implements Insertable<NoteData> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
+          ..write('date: $date, ')
           ..write('priority: $priority, ')
           ..write('color: $color')
           ..write(')'))
@@ -194,7 +216,8 @@ class NoteData extends DataClass implements Insertable<NoteData> {
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description, priority, color);
+  int get hashCode =>
+      Object.hash(id, title, description, date, priority, color);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -202,6 +225,7 @@ class NoteData extends DataClass implements Insertable<NoteData> {
           other.id == this.id &&
           other.title == this.title &&
           other.description == this.description &&
+          other.date == this.date &&
           other.priority == this.priority &&
           other.color == this.color);
 }
@@ -210,12 +234,14 @@ class NoteCompanion extends UpdateCompanion<NoteData> {
   final Value<int> id;
   final Value<String> title;
   final Value<String> description;
+  final Value<String> date;
   final Value<int?> priority;
   final Value<int?> color;
   const NoteCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
+    this.date = const Value.absent(),
     this.priority = const Value.absent(),
     this.color = const Value.absent(),
   });
@@ -223,14 +249,17 @@ class NoteCompanion extends UpdateCompanion<NoteData> {
     this.id = const Value.absent(),
     required String title,
     required String description,
+    required String date,
     this.priority = const Value.absent(),
     this.color = const Value.absent(),
   })  : title = Value(title),
-        description = Value(description);
+        description = Value(description),
+        date = Value(date);
   static Insertable<NoteData> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? description,
+    Expression<String>? date,
     Expression<int>? priority,
     Expression<int>? color,
   }) {
@@ -238,6 +267,7 @@ class NoteCompanion extends UpdateCompanion<NoteData> {
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (description != null) 'description': description,
+      if (date != null) 'date': date,
       if (priority != null) 'priority': priority,
       if (color != null) 'color': color,
     });
@@ -247,12 +277,14 @@ class NoteCompanion extends UpdateCompanion<NoteData> {
       {Value<int>? id,
       Value<String>? title,
       Value<String>? description,
+      Value<String>? date,
       Value<int?>? priority,
       Value<int?>? color}) {
     return NoteCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
+      date: date ?? this.date,
       priority: priority ?? this.priority,
       color: color ?? this.color,
     );
@@ -270,6 +302,9 @@ class NoteCompanion extends UpdateCompanion<NoteData> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
     if (priority.present) {
       map['priority'] = Variable<int>(priority.value);
     }
@@ -285,6 +320,7 @@ class NoteCompanion extends UpdateCompanion<NoteData> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
+          ..write('date: $date, ')
           ..write('priority: $priority, ')
           ..write('color: $color')
           ..write(')'))

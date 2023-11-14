@@ -19,6 +19,7 @@ class Note extends Table {
   TextColumn get title => text()();
 
   TextColumn get description => text().named('description')();
+  TextColumn get date => text()();
   IntColumn get priority => integer().nullable()();
   IntColumn get color => integer().nullable()();
 }

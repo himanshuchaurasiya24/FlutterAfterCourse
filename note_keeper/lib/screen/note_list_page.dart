@@ -17,12 +17,53 @@ class NoteListPage extends StatefulWidget {
 class _NoteListPageState extends State<NoteListPage> {
   late AppDatabase database;
   late List<NoteData> noteList;
+  int axisCount = 2;
+  List<Color> colors = const [
+    Color(0xFFFFFFFF),
+    Color(0xffF28B83),
+    Color(0xFFFCBC05),
+    Color(0xFFFFF476),
+    Color(0xFFCBFF90),
+    Color(0xFFA7FEEA),
+    Color(0xFFE6C9A9),
+    Color(0xFFE8EAEE),
+    Color(0xFFA7FEEA),
+    Color(0xFFCAF0F8)
+  ];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint('Build Context called');
     database = Provider.of<AppDatabase>(context);
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Notes',
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (axisCount == 2) {
+                axisCount = 4;
+              } else {
+                axisCount = 2;
+              }
+              setState(() {});
+            },
+            icon: Icon(
+              axisCount == 2 ? Icons.list : Icons.grid_on,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
       body: FutureBuilder<List<NoteData>>(
         future: _getNotesFromDatabase(),
         builder: (context, snapshot) {
@@ -60,8 +101,8 @@ class _NoteListPageState extends State<NoteListPage> {
             const NoteCompanion(
               title: dr.Value(''),
               description: dr.Value(''),
-              priority: dr.Value(null),
-              color: dr.Value(null),
+              priority: dr.Value(0),
+              color: dr.Value(0),
             ),
           );
         },
@@ -73,18 +114,28 @@ class _NoteListPageState extends State<NoteListPage> {
 
   _getPriority(int priority) {
     switch (priority) {
-      case 1:
-        return const Text(
-          'Highest',
-          style: TextStyle(
-            color: Colors.red,
-          ),
-        );
       case 2:
         return const Text(
-          'Medium',
+          'Very High',
           style: TextStyle(
-            color: Colors.pink,
+            color: Colors.red,
+            fontSize: 16,
+          ),
+        );
+      case 1:
+        return const Text(
+          'High',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.orange,
+          ),
+        );
+      case 0:
+        return const Text(
+          'Low',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.green,
           ),
         );
       default:
@@ -92,6 +143,7 @@ class _NoteListPageState extends State<NoteListPage> {
           'Low',
           style: TextStyle(
             color: Colors.green,
+            fontSize: 16,
           ),
         );
     }
@@ -141,6 +193,7 @@ class _NoteListPageState extends State<NoteListPage> {
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
+              color: colors[noteData.color!],
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.black),
             ),
@@ -153,16 +206,6 @@ class _NoteListPageState extends State<NoteListPage> {
                       noteData.title,
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
-                    // Text(
-                    //   noteData.priority == null
-                    //       ? 'No Priority'
-                    //       : _getPriority(
-                    //           noteData.priority!,
-                    //         ),
-                    //   style: TextStyle(
-                    //     color: _getColor(noteData.priority),
-                    //   ),
-                    // ),
                     noteData.priority == null
                         ? const Text(
                             'No Priority',
@@ -179,7 +222,7 @@ class _NoteListPageState extends State<NoteListPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      '14/11/2023',
+                      noteData.date,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ],
@@ -190,7 +233,7 @@ class _NoteListPageState extends State<NoteListPage> {
         );
       },
       staggeredTileBuilder: (index) {
-        return const StaggeredTile.fit(2);
+        return StaggeredTile.fit(axisCount);
       },
     );
   }

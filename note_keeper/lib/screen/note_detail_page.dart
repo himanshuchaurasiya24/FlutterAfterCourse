@@ -1,7 +1,10 @@
 import 'package:drift/drift.dart' as dr;
 import 'package:flutter/material.dart';
 import 'package:note_keeper/database/database.dart';
+import 'package:note_keeper/util/color_picker.dart';
+import 'package:note_keeper/util/priority_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class NoteDetailPage extends StatefulWidget {
   const NoteDetailPage(
@@ -17,10 +20,28 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   late AppDatabase appDatabase;
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  int priorityLevel = 0;
+  int color = 0;
+  late Color backgroundColor = colors[color];
+  List<Color> colors = const [
+    Color(0xFFFFFFFF),
+    Color(0xffF28B83),
+    Color(0xFFFCBC05),
+    Color(0xFFFFF476),
+    Color(0xFFCBFF90),
+    Color(0xFFA7FEEA),
+    Color(0xFFE6C9A9),
+    Color(0xFFE8EAEE),
+    Color(0xFFA7FEEA),
+    Color(0xFFCAF0F8)
+  ];
   @override
   void initState() {
     _titleController.text = widget.noteCompanion.title.value;
     _descriptionController.text = widget.noteCompanion.description.value;
+    color = widget.noteCompanion.color.value ?? 0;
+    priorityLevel = widget.noteCompanion.priority.value ?? 0;
+
     super.initState();
   }
 
@@ -28,7 +49,6 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    // appDatabase.close();
     super.dispose();
   }
 
@@ -38,6 +58,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: colors[color],
         centerTitle: true,
         elevation: 0,
         actions: [
@@ -56,26 +77,52 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
             ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            CustomTextFormField(
-              textEditingController: _titleController,
-              label: 'title',
-              maxLength: 255,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            // height: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            color: colors[color],
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                PriorityPicker(
+                  index: priorityLevel,
+                  onTap: (selectedIndex) {
+                    priorityLevel = selectedIndex;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ColorPicker(
+                  index: color,
+                  onTap: (selectedColor) {
+                    color = selectedColor;
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CustomTextFormField(
+                  textEditingController: _titleController,
+                  label: 'title',
+                  maxLength: 255,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomTextFormField(
+                  textEditingController: _descriptionController,
+                  label: 'description',
+                  maxLength: 255,
+                  maxLines: 8,
+                  minLines: 7,
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomTextFormField(
-              textEditingController: _descriptionController,
-              label: 'description',
-              maxLength: 255,
-              maxLines: 8,
-              minLines: 7,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -94,11 +141,15 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                 appDatabase
                     .deleteNote(
                   NoteData(
-                      id: widget.noteCompanion.id.value,
-                      title: widget.noteCompanion.title.value,
-                      description: widget.noteCompanion.description.value,
-                      priority: widget.noteCompanion.priority.value,
-                      color: widget.noteCompanion.color.value),
+                    id: widget.noteCompanion.id.value,
+                    title: widget.noteCompanion.title.value,
+                    description: widget.noteCompanion.description.value,
+                    priority: widget.noteCompanion.priority.value,
+                    color: widget.noteCompanion.color.value,
+                    date: DateFormat.yMMMd().format(
+                      DateTime.now(),
+                    ),
+                  ),
                 )
                     .then((value) {
                   Navigator.pop(context, true);
@@ -128,8 +179,11 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           id: widget.noteCompanion.id.value,
           title: _titleController.text,
           description: _descriptionController.text,
-          color: widget.noteCompanion.color.value,
-          priority: widget.noteCompanion.priority.value,
+          color: color,
+          priority: priorityLevel,
+          date: DateFormat.yMMMd().format(
+            DateTime.now(),
+          ),
         ),
       )
           .then((value) {
@@ -141,8 +195,13 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         NoteCompanion(
           title: dr.Value(_titleController.text),
           description: dr.Value(_descriptionController.text),
-          color: dr.Value(widget.noteCompanion.color.value),
-          priority: dr.Value(widget.noteCompanion.priority.value),
+          color: dr.Value(color),
+          priority: dr.Value(priorityLevel),
+          date: dr.Value(
+            DateFormat.yMMMd().format(
+              DateTime.now(),
+            ),
+          ),
         ),
       )
           .then((value) {
