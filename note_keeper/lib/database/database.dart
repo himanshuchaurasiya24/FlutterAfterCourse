@@ -5,6 +5,14 @@ import 'package:drift/drift.dart';
 import 'package:path_provider/path_provider.dart';
 part 'database.g.dart';
 
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(path.join(dbFolder.path, 'note.sqlite'));
+    return NativeDatabase(file);
+  });
+}
+
 class Note extends Table {
   IntColumn get id => integer().autoIncrement()();
 
@@ -20,12 +28,20 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
   @override
   int get schemaVersion => 1;
-}
 
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(path.join(dbFolder.path, 'note.sqlite'));
-    return NativeDatabase(file);
-  });
+  Future<List<NoteData>> getNoteList() async {
+    return await select(note).get();
+  }
+
+  Future<int> insertNote(NoteCompanion noteCompanion) async {
+    return await into(note).insert(noteCompanion);
+  }
+
+  Future<int> deleteNote(NoteData noteData) async {
+    return await delete(note).delete(noteData);
+  }
+
+  Future<bool> updateNote(NoteData noteData) async {
+    return await update(note).replace(noteData);
+  }
 }
