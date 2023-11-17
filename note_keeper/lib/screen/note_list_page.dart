@@ -37,7 +37,6 @@ class _NoteListPageState extends State<NoteListPage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Build Context called');
     database = Provider.of<AppDatabase>(context);
     return Scaffold(
       appBar: AppBar(

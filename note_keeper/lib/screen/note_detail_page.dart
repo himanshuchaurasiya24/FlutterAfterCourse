@@ -80,7 +80,6 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
       body: SingleChildScrollView(
         child: Center(
           child: Container(
-            // height: double.infinity,
             height: MediaQuery.of(context).size.height,
             color: colors[color],
             padding: const EdgeInsets.all(12),
