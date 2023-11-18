@@ -13,6 +13,11 @@ class AddQuestionScreen extends StatefulWidget {
 }
 
 class _AddQuestionScreenState extends State<AddQuestionScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   final _formKey = GlobalKey<FormState>();
   late AppDatabase database;
   TextEditingController _questionController = TextEditingController();
@@ -20,102 +25,112 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   TextEditingController _secondOptionController = TextEditingController();
   TextEditingController _thirdOptionController = TextEditingController();
   TextEditingController _fourthOptionController = TextEditingController();
-  Future<List<QuestionModelData>> _getQuestionModelList() async {
-    return await database.getQuestionModelList();
-  }
 
   @override
   Widget build(BuildContext context) {
     database = Provider.of<AppDatabase>(context);
-    return Provider<AppDatabase>(
-      create: (_) => AppDatabase(),
-      // we use `builder` to obtain a new `BuildContext` that has access to the provider
-      builder: (context, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Add Question'),
-            centerTitle: true,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  CustomTextFormField(
-                    controller: _questionController,
-                    labelText: 'Enter Your Question',
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  CustomTextFormField(
-                    controller: _correctOptionController,
-                    labelText: 'Enter Your Correct Option',
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  CustomTextFormField(
-                    controller: _secondOptionController,
-                    labelText: 'Enter Your Second Option',
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  CustomTextFormField(
-                    controller: _thirdOptionController,
-                    labelText: 'Enter Your Third Option',
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  CustomTextFormField(
-                    controller: _fourthOptionController,
-                    labelText: 'Enter Your Fourth Option',
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  SizedBox(
-                    height: 70,
-                    width: 150,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 20,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Question'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              CustomTextFormField(
+                controller: _questionController,
+                labelText: 'Enter Your Question',
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              CustomTextFormField(
+                controller: _correctOptionController,
+                labelText: 'Enter Your Correct Option',
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              CustomTextFormField(
+                controller: _secondOptionController,
+                labelText: 'Enter Your Second Option',
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              CustomTextFormField(
+                controller: _thirdOptionController,
+                labelText: 'Enter Your Third Option',
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              CustomTextFormField(
+                controller: _fourthOptionController,
+                labelText: 'Enter Your Fourth Option',
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              SizedBox(
+                height: 70,
+                width: 150,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 20,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
                       ),
-                      onPressed: () {
-                        // save question here
-                      },
-                      child: const Text('Save Question'),
                     ),
                   ),
-                ],
+                  onPressed: () {
+                    addQuestion();
+                  },
+                  child: const Text('Save Question'),
+                ),
               ),
-            ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
   void addQuestion() {
+    debugPrint(_questionController.text);
+    debugPrint(_correctOptionController.text);
+    debugPrint(_secondOptionController.text);
+    debugPrint(_thirdOptionController.text);
+    debugPrint(_fourthOptionController.text);
     final isValid = _formKey.currentState?.validate();
     if (isValid != null && isValid) {
       final questionModel = QuestionModelCompanion(
-        question: dr.Value(_questionController.text),
-        correctOption: dr.Value(_correctOptionController.text),
-        secondOption: dr.Value(_secondOptionController.text),
-        thirdOption: dr.Value(_thirdOptionController.text),
-        fourthOption: dr.Value(_fourthOptionController.text),
+        question: dr.Value(_questionController.text.toString()),
+        correctOption: dr.Value(
+          _correctOptionController.text.toString(),
+        ),
+        secondOption: dr.Value(
+          _secondOptionController.text.toString(),
+        ),
+        thirdOption: dr.Value(
+          _thirdOptionController.text.toString(),
+        ),
+        fourthOption: dr.Value(
+          _fourthOptionController.text.toString(),
+        ),
       );
-      database.insertQuestionModel(questionModel);
+      database.insertQuestionModel(questionModel).then((value) {
+        debugPrint(
+          value.toString(),
+        );
+      });
     }
+    // database.deleteAllQuestionModel();
   }
 }
 
@@ -131,6 +146,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
         label: Text(labelText),

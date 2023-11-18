@@ -48,4 +48,8 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteQuestionModel(QuestionModelData questionModelData) async {
     return await delete(questionModel).delete(questionModelData);
   }
+
+  Future<int> deleteAllQuestionModel() async {
+    return await delete(questionModel).go();
+  }
 }
