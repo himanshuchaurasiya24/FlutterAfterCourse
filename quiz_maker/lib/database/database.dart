@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 part 'database.g.dart';
 
 class QuestionModel extends Table {
+  IntColumn get id => integer().autoIncrement()();
   TextColumn get question => text().named('question')();
   TextColumn get correctOption => text().named('correctOption')();
   TextColumn get secondOption => text().named('secondOption')();

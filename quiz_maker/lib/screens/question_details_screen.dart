@@ -1,23 +1,19 @@
-// comments here...
-
-import 'package:drift/drift.dart' as dr;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_maker/database/database.dart';
 
-class AddQuestionScreen extends StatefulWidget {
-  const AddQuestionScreen({super.key});
+class QuestionDetailsScreen extends StatefulWidget {
+  const QuestionDetailsScreen({
+    super.key,
+    required this.questionModelCompanion,
+  });
+  final QuestionModelCompanion questionModelCompanion;
 
   @override
-  State<AddQuestionScreen> createState() => _AddQuestionScreenState();
+  State<QuestionDetailsScreen> createState() => _QuestionDetailsScreenState();
 }
 
-class _AddQuestionScreenState extends State<AddQuestionScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _QuestionDetailsScreenState extends State<QuestionDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
   late AppDatabase database;
   TextEditingController _questionController = TextEditingController();
@@ -25,6 +21,24 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   TextEditingController _secondOptionController = TextEditingController();
   TextEditingController _thirdOptionController = TextEditingController();
   TextEditingController _fourthOptionController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    debugPrint(widget.questionModelCompanion.question.value);
+    debugPrint(widget.questionModelCompanion.correctOption.value);
+    debugPrint(widget.questionModelCompanion.secondOption.value);
+    debugPrint(widget.questionModelCompanion.thirdOption.value);
+    debugPrint(widget.questionModelCompanion.fourthOption.value);
+    _questionController.text = widget.questionModelCompanion.question.value;
+    _correctOptionController.text =
+        widget.questionModelCompanion.correctOption.value;
+    _secondOptionController.text =
+        widget.questionModelCompanion.secondOption.value;
+    _thirdOptionController.text =
+        widget.questionModelCompanion.thirdOption.value;
+    _fourthOptionController.text =
+        widget.questionModelCompanion.fourthOption.value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +46,25 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Question'),
-        centerTitle: true,
+        title: const Text('Question Details'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              //save or update here...
+              updateQuestion();
+            },
+            icon: const Icon(Icons.update_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              //delete here...
+              deleteQuestion();
+            },
+            icon: const Icon(
+              Icons.delete_outlined,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -77,24 +108,6 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                 const SizedBox(
                   height: 16,
                 ),
-                SizedBox(
-                  height: 70,
-                  width: 150,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 20,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      addQuestion();
-                    },
-                    child: const Text('Save Question'),
-                  ),
-                ),
               ],
             ),
           ),
@@ -103,30 +116,44 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
     );
   }
 
-  void addQuestion() {
+  void deleteQuestion() {
+    database
+        .deleteQuestionModel(
+      QuestionModelData(
+        id: widget.questionModelCompanion.id.value,
+        question: widget.questionModelCompanion.question.value,
+        correctOption: widget.questionModelCompanion.correctOption.value,
+        secondOption: widget.questionModelCompanion.secondOption.value,
+        thirdOption: widget.questionModelCompanion.thirdOption.value,
+        fourthOption: widget.questionModelCompanion.fourthOption.value,
+      ),
+    )
+        .then((value) {
+      debugPrint('delete $value');
+      Navigator.pop(context, value);
+    });
+  }
+
+  updateQuestion() {
     final isValid = _formKey.currentState?.validate();
     if (isValid != null && isValid) {
-      final questionModel = QuestionModelCompanion(
-        question: dr.Value(_questionController.text.trim().toString()),
-        correctOption: dr.Value(
-          _correctOptionController.text.trim().toString(),
+      database
+          .updateQuestionModel(
+        QuestionModelData(
+          id: widget.questionModelCompanion.id.value,
+          question: _questionController.text,
+          correctOption: _correctOptionController.text,
+          secondOption: _secondOptionController.text,
+          thirdOption: _thirdOptionController.text,
+          fourthOption: _fourthOptionController.text,
         ),
-        secondOption: dr.Value(
-          _secondOptionController.text.trim().toString(),
-        ),
-        thirdOption: dr.Value(
-          _thirdOptionController.text.trim().toString(),
-        ),
-        fourthOption: dr.Value(
-          _fourthOptionController.text.trim().toString(),
-        ),
+      )
+          .then(
+        (value) {
+          debugPrint('update $value');
+          Navigator.pop(context, value);
+        },
       );
-      database.insertQuestionModel(questionModel).then((value) {
-        debugPrint('add Question $value');
-        Navigator.pop(context, value);
-      });
-    } else {
-      'Some fields might be null. Please check it.';
     }
   }
 }

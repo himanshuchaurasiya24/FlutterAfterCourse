@@ -9,6 +9,15 @@ class $QuestionModelTable extends QuestionModel
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $QuestionModelTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _questionMeta =
       const VerificationMeta('question');
   @override
@@ -41,7 +50,7 @@ class $QuestionModelTable extends QuestionModel
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [question, correctOption, secondOption, thirdOption, fourthOption];
+      [id, question, correctOption, secondOption, thirdOption, fourthOption];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -52,6 +61,9 @@ class $QuestionModelTable extends QuestionModel
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('question')) {
       context.handle(_questionMeta,
           question.isAcceptableOrUnknown(data['question']!, _questionMeta));
@@ -94,11 +106,13 @@ class $QuestionModelTable extends QuestionModel
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   QuestionModelData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return QuestionModelData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       question: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}question'])!,
       correctOption: attachedDatabase.typeMapping
@@ -120,13 +134,15 @@ class $QuestionModelTable extends QuestionModel
 
 class QuestionModelData extends DataClass
     implements Insertable<QuestionModelData> {
+  final int id;
   final String question;
   final String correctOption;
   final String secondOption;
   final String thirdOption;
   final String fourthOption;
   const QuestionModelData(
-      {required this.question,
+      {required this.id,
+      required this.question,
       required this.correctOption,
       required this.secondOption,
       required this.thirdOption,
@@ -134,6 +150,7 @@ class QuestionModelData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
     map['question'] = Variable<String>(question);
     map['correctOption'] = Variable<String>(correctOption);
     map['secondOption'] = Variable<String>(secondOption);
@@ -144,6 +161,7 @@ class QuestionModelData extends DataClass
 
   QuestionModelCompanion toCompanion(bool nullToAbsent) {
     return QuestionModelCompanion(
+      id: Value(id),
       question: Value(question),
       correctOption: Value(correctOption),
       secondOption: Value(secondOption),
@@ -156,6 +174,7 @@ class QuestionModelData extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return QuestionModelData(
+      id: serializer.fromJson<int>(json['id']),
       question: serializer.fromJson<String>(json['question']),
       correctOption: serializer.fromJson<String>(json['correctOption']),
       secondOption: serializer.fromJson<String>(json['secondOption']),
@@ -167,6 +186,7 @@ class QuestionModelData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
       'question': serializer.toJson<String>(question),
       'correctOption': serializer.toJson<String>(correctOption),
       'secondOption': serializer.toJson<String>(secondOption),
@@ -176,12 +196,14 @@ class QuestionModelData extends DataClass
   }
 
   QuestionModelData copyWith(
-          {String? question,
+          {int? id,
+          String? question,
           String? correctOption,
           String? secondOption,
           String? thirdOption,
           String? fourthOption}) =>
       QuestionModelData(
+        id: id ?? this.id,
         question: question ?? this.question,
         correctOption: correctOption ?? this.correctOption,
         secondOption: secondOption ?? this.secondOption,
@@ -191,6 +213,7 @@ class QuestionModelData extends DataClass
   @override
   String toString() {
     return (StringBuffer('QuestionModelData(')
+          ..write('id: $id, ')
           ..write('question: $question, ')
           ..write('correctOption: $correctOption, ')
           ..write('secondOption: $secondOption, ')
@@ -202,11 +225,12 @@ class QuestionModelData extends DataClass
 
   @override
   int get hashCode => Object.hash(
-      question, correctOption, secondOption, thirdOption, fourthOption);
+      id, question, correctOption, secondOption, thirdOption, fourthOption);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is QuestionModelData &&
+          other.id == this.id &&
           other.question == this.question &&
           other.correctOption == this.correctOption &&
           other.secondOption == this.secondOption &&
@@ -215,70 +239,73 @@ class QuestionModelData extends DataClass
 }
 
 class QuestionModelCompanion extends UpdateCompanion<QuestionModelData> {
+  final Value<int> id;
   final Value<String> question;
   final Value<String> correctOption;
   final Value<String> secondOption;
   final Value<String> thirdOption;
   final Value<String> fourthOption;
-  final Value<int> rowid;
   const QuestionModelCompanion({
+    this.id = const Value.absent(),
     this.question = const Value.absent(),
     this.correctOption = const Value.absent(),
     this.secondOption = const Value.absent(),
     this.thirdOption = const Value.absent(),
     this.fourthOption = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   QuestionModelCompanion.insert({
+    this.id = const Value.absent(),
     required String question,
     required String correctOption,
     required String secondOption,
     required String thirdOption,
     required String fourthOption,
-    this.rowid = const Value.absent(),
   })  : question = Value(question),
         correctOption = Value(correctOption),
         secondOption = Value(secondOption),
         thirdOption = Value(thirdOption),
         fourthOption = Value(fourthOption);
   static Insertable<QuestionModelData> custom({
+    Expression<int>? id,
     Expression<String>? question,
     Expression<String>? correctOption,
     Expression<String>? secondOption,
     Expression<String>? thirdOption,
     Expression<String>? fourthOption,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (question != null) 'question': question,
       if (correctOption != null) 'correctOption': correctOption,
       if (secondOption != null) 'secondOption': secondOption,
       if (thirdOption != null) 'thirdOption': thirdOption,
       if (fourthOption != null) 'fourthOption': fourthOption,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   QuestionModelCompanion copyWith(
-      {Value<String>? question,
+      {Value<int>? id,
+      Value<String>? question,
       Value<String>? correctOption,
       Value<String>? secondOption,
       Value<String>? thirdOption,
-      Value<String>? fourthOption,
-      Value<int>? rowid}) {
+      Value<String>? fourthOption}) {
     return QuestionModelCompanion(
+      id: id ?? this.id,
       question: question ?? this.question,
       correctOption: correctOption ?? this.correctOption,
       secondOption: secondOption ?? this.secondOption,
       thirdOption: thirdOption ?? this.thirdOption,
       fourthOption: fourthOption ?? this.fourthOption,
-      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (question.present) {
       map['question'] = Variable<String>(question.value);
     }
@@ -294,21 +321,18 @@ class QuestionModelCompanion extends UpdateCompanion<QuestionModelData> {
     if (fourthOption.present) {
       map['fourthOption'] = Variable<String>(fourthOption.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('QuestionModelCompanion(')
+          ..write('id: $id, ')
           ..write('question: $question, ')
           ..write('correctOption: $correctOption, ')
           ..write('secondOption: $secondOption, ')
           ..write('thirdOption: $thirdOption, ')
-          ..write('fourthOption: $fourthOption, ')
-          ..write('rowid: $rowid')
+          ..write('fourthOption: $fourthOption')
           ..write(')'))
         .toString();
   }
