@@ -102,26 +102,21 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   }
 
   void addQuestion() {
-    debugPrint(_questionController.text);
-    debugPrint(_correctOptionController.text);
-    debugPrint(_secondOptionController.text);
-    debugPrint(_thirdOptionController.text);
-    debugPrint(_fourthOptionController.text);
     final isValid = _formKey.currentState?.validate();
     if (isValid != null && isValid) {
       final questionModel = QuestionModelCompanion(
-        question: dr.Value(_questionController.text.toString()),
+        question: dr.Value(_questionController.text.trim().toString()),
         correctOption: dr.Value(
-          _correctOptionController.text.toString(),
+          _correctOptionController.text.trim().toString(),
         ),
         secondOption: dr.Value(
-          _secondOptionController.text.toString(),
+          _secondOptionController.text.trim().toString(),
         ),
         thirdOption: dr.Value(
-          _thirdOptionController.text.toString(),
+          _thirdOptionController.text.trim().toString(),
         ),
         fourthOption: dr.Value(
-          _fourthOptionController.text.toString(),
+          _fourthOptionController.text.trim().toString(),
         ),
       );
       database.insertQuestionModel(questionModel).then((value) {
@@ -129,8 +124,9 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
           value.toString(),
         );
       });
+    } else {
+      'Some fields might be null. Please check it.';
     }
-    // database.deleteAllQuestionModel();
   }
 }
 
@@ -151,6 +147,12 @@ class CustomTextFormField extends StatelessWidget {
         border: const OutlineInputBorder(),
         label: Text(labelText),
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return labelText;
+        }
+        return null;
+      },
     );
   }
 }
