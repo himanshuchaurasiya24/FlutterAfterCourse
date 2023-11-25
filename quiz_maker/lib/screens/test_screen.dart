@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_maker/database/database.dart';
+import 'package:quiz_maker/option_maker.dart';
 import 'package:quiz_maker/screens/result_screen.dart';
 
 class TestScreen extends StatefulWidget {
@@ -58,13 +59,18 @@ class _TestScreenState extends State<TestScreen> {
                           itemCount:
                               shuffledAnswers(questionList, counter).length,
                           itemBuilder: (context, index) {
-                            List<String> options =
-                                shuffledAnswers(questionList, counter);
+                            List<String> ans1 = [];
+
+                            ans1.add(questionList[counter].correctOption);
+                            ans1.add(questionList[counter].secondOption);
+                            ans1.add(questionList[counter].thirdOption);
+                            ans1.add(questionList[counter].fourthOption);
+                            List<String> shuffledAnswer =
+                                OptionMaker(answers: ans1).getShuffledAnswers();
+
                             return GestureDetector(
                               onTap: () {
-                                options =
-                                    shuffledAnswers(questionList, counter);
-                                answers.add(options[index]);
+                                answers.add(shuffledAnswer[index]);
                                 if (counter < questionList.length - 1) {
                                   setState(() {
                                     counter++;
@@ -87,7 +93,7 @@ class _TestScreenState extends State<TestScreen> {
                                 decoration: BoxDecoration(
                                     color: Colors.grey,
                                     borderRadius: BorderRadius.circular(10)),
-                                child: Text(options[index]),
+                                child: Text(shuffledAnswer[index]),
                               ),
                             );
                           },
