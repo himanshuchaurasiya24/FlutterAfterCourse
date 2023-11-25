@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_maker/database/database.dart';
 import 'package:quiz_maker/screens/question_list_screen.dart';
+import 'package:quiz_maker/screens/test_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -38,6 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: TextButton(
                 onPressed: () {
                   // start quiz screen here...
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const TestScreen();
+                      },
+                    ),
+                  );
                 },
                 child: const Text('Start Quiz'),
               ),
