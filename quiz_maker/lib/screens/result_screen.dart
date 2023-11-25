@@ -13,6 +13,12 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen> {
   late AppDatabase database;
   late List<QuestionModelData> questionData;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     database = Provider.of<AppDatabase>(context);

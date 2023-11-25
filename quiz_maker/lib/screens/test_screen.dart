@@ -21,6 +21,7 @@ class _TestScreenState extends State<TestScreen> {
 
   late AppDatabase database;
   List<String> answers = [];
+  List<String> options = [];
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +47,15 @@ class _TestScreenState extends State<TestScreen> {
                       'No question found, Please add something from the option'),
                 );
               } else {
+                List<String> optionUnshuffled = OptionMaker(answers: [
+                  questionList[counter].correctOption,
+                  questionList[counter].secondOption,
+                  questionList[counter].thirdOption,
+                  questionList[counter].fourthOption
+                ]).getShuffledAnswers();
+                options = optionUnshuffled;
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
                       Text(
@@ -56,21 +64,11 @@ class _TestScreenState extends State<TestScreen> {
                       ),
                       Expanded(
                         child: ListView.builder(
-                          itemCount:
-                              shuffledAnswers(questionList, counter).length,
+                          itemCount: options.length,
                           itemBuilder: (context, index) {
-                            List<String> ans1 = [];
-
-                            ans1.add(questionList[counter].correctOption);
-                            ans1.add(questionList[counter].secondOption);
-                            ans1.add(questionList[counter].thirdOption);
-                            ans1.add(questionList[counter].fourthOption);
-                            List<String> shuffledAnswer =
-                                OptionMaker(answers: ans1).getShuffledAnswers();
-
                             return GestureDetector(
                               onTap: () {
-                                answers.add(shuffledAnswer[index]);
+                                answers.add(options[index]);
                                 if (counter < questionList.length - 1) {
                                   setState(() {
                                     counter++;
@@ -93,12 +91,14 @@ class _TestScreenState extends State<TestScreen> {
                                 decoration: BoxDecoration(
                                     color: Colors.grey,
                                     borderRadius: BorderRadius.circular(10)),
-                                child: Text(shuffledAnswer[index]),
+                                child: Text(
+                                  options[index],
+                                ),
                               ),
                             );
                           },
                         ),
-                      )
+                      ),
                     ],
                   ),
                 );
@@ -130,171 +130,3 @@ class _TestScreenState extends State<TestScreen> {
     return await database.getQuestionModelList();
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
- // GestureDetector(
-                      //   onTap: () {
-                      //     setState(() {
-                      //       answers.add(questionList[counter].correctOption);
-                      //       if (counter < questionList.length - 1) {
-                      //         counter++;
-                      //       } else {
-                      //         counter = 0;
-                      //         Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //             builder: (context) => ResultScreen(
-                      //               givenAnswers: answers,
-                      //             ),
-                      //           ),
-                      //         );
-                      //       }
-                      //     });
-                      //   },
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         height: 60,
-                      //         width: double.infinity,
-                      //         decoration: BoxDecoration(
-                      //             color: Colors.grey,
-                      //             borderRadius: BorderRadius.circular(10)),
-                      //         child: Text(
-                      //           questionList[counter].correctOption,
-                      //           textAlign: TextAlign.center,
-                      //           style: const TextStyle(fontSize: 30),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 20,
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     setState(() {
-                      //       answers.add(questionList[counter].secondOption);
-                      //       if (counter < questionList.length - 1) {
-                      //         counter++;
-                      //       } else {
-                      //         counter = 0;
-                      //         Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //             builder: (context) => ResultScreen(
-                      //               givenAnswers: answers,
-                      //             ),
-                      //           ),
-                      //         );
-                      //       }
-                      //     });
-                      //   },
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         height: 60,
-                      //         width: double.infinity,
-                      //         decoration: BoxDecoration(
-                      //             color: Colors.grey,
-                      //             borderRadius: BorderRadius.circular(10)),
-                      //         child: Text(
-                      //           questionList[counter].secondOption,
-                      //           textAlign: TextAlign.center,
-                      //           style: const TextStyle(fontSize: 30),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 20,
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     setState(() {
-                      //       answers.add(questionList[counter].thirdOption);
-                      //       if (counter < questionList.length - 1) {
-                      //         counter++;
-                      //       } else {
-                      //         counter = 0;
-                      //         Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //             builder: (context) => ResultScreen(
-                      //               givenAnswers: answers,
-                      //             ),
-                      //           ),
-                      //         );
-                      //       }
-                      //     });
-                      //   },
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         height: 60,
-                      //         width: double.infinity,
-                      //         decoration: BoxDecoration(
-                      //             color: Colors.grey,
-                      //             borderRadius: BorderRadius.circular(10)),
-                      //         child: Text(
-                      //           questionList[counter].thirdOption,
-                      //           textAlign: TextAlign.center,
-                      //           style: const TextStyle(fontSize: 30),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 20,
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     setState(() {
-                      //       answers.add(questionList[counter].fourthOption);
-                      //       if (counter < questionList.length - 1) {
-                      //         counter++;
-                      //       } else {
-                      //         counter = 0;
-                      //         Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //             builder: (context) => ResultScreen(
-                      //               givenAnswers: answers,
-                      //             ),
-                      //           ),
-                      //         );
-                      //       }
-                      //     });
-                      //   },
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         height: 60,
-                      //         width: double.infinity,
-                      //         decoration: BoxDecoration(
-                      //             color: Colors.grey,
-                      //             borderRadius: BorderRadius.circular(10)),
-                      //         child: Text(
-                      //           questionList[counter].fourthOption,
-                      //           textAlign: TextAlign.center,
-                      //           style: const TextStyle(fontSize: 30),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 20,
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
