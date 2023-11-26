@@ -13,9 +13,12 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen> {
   late AppDatabase database;
   late List<QuestionModelData> questionData;
-
+  int correctAnswer = 0;
+  int wrongAnswer = 0;
   @override
   void dispose() {
+    correctAnswer = 0;
+    wrongAnswer = 0;
     super.dispose();
   }
 
@@ -42,50 +45,71 @@ class _ResultScreenState extends State<ResultScreen> {
                     child: Text('No question data fetched from the database'),
                   );
                 } else {
-                  return ListView.builder(
-                    itemCount: questionData.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.only(left: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${index + 1} ${questionData[index].question}',
-                              style: const TextStyle(
-                                  fontSize: 60, color: Colors.blue),
-                            ),
-                            questionData[index].correctOption ==
-                                    widget.givenAnswers[index]
-                                ? Text(
-                                    questionData[index].correctOption,
+                  for (int i = 0; i < questionData.length; i++) {
+                    if (questionData[i].correctOption ==
+                        widget.givenAnswers[i]) {
+                      correctAnswer++;
+                    } else if (questionData[i].correctOption !=
+                        widget.givenAnswers[i]) {
+                      wrongAnswer++;
+                    }
+                  }
+                  return Column(
+                    children: [
+                      Text(
+                          'Number of correct answer: ${correctAnswer.toString()}'),
+                      Text('Number of wrong answer: ${wrongAnswer.toString()}'),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: questionData.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: const EdgeInsets.only(left: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${index + 1} ${questionData[index].question}',
                                     style: const TextStyle(
-                                        color: Colors.green, fontSize: 35),
-                                  )
-                                : Column(
-                                    children: [
-                                      Text(
-                                        widget.givenAnswers[index],
-                                        style: TextStyle(
-                                          color: questionData[index]
-                                                      .correctOption ==
-                                                  widget.givenAnswers[index]
-                                              ? Colors.green
-                                              : Colors.red,
-                                          fontSize: 35,
-                                        ),
-                                      ),
-                                      Text(
-                                        questionData[index].correctOption,
-                                        style: const TextStyle(
-                                            fontSize: 35, color: Colors.green),
-                                      ),
-                                    ],
-                                  )
-                          ],
+                                        fontSize: 60, color: Colors.blue),
+                                  ),
+                                  questionData[index].correctOption ==
+                                          widget.givenAnswers[index]
+                                      ? Text(
+                                          questionData[index].correctOption,
+                                          style: const TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 35),
+                                        )
+                                      : Column(
+                                          children: [
+                                            Text(
+                                              widget.givenAnswers[index],
+                                              style: TextStyle(
+                                                color: questionData[index]
+                                                            .correctOption ==
+                                                        widget
+                                                            .givenAnswers[index]
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                                fontSize: 35,
+                                              ),
+                                            ),
+                                            Text(
+                                              questionData[index].correctOption,
+                                              style: const TextStyle(
+                                                  fontSize: 35,
+                                                  color: Colors.green),
+                                            ),
+                                          ],
+                                        )
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   );
                 }
               }
