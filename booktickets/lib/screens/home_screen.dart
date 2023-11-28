@@ -84,9 +84,7 @@ class HomeScreen extends StatelessWidget {
                       style: Style.headlineStyle1,
                     ),
                     InkWell(
-                      onTap: () {
-                        print('tapped');
-                      },
+                      onTap: () {},
                       child: Text(
                         'View All',
                         style:

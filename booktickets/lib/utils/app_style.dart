@@ -6,7 +6,7 @@ class Style {
   static Color primaryColor = primary;
   static Color textColor = const Color(0xFF3B3B3B);
   static Color bgColor = const Color(0xFFEEEDF2);
-  static Color orangeColor = const Color(0xFF526799);
+  static Color orangeColor = const Color(0xFFf37b67);
   static TextStyle textStyle = TextStyle(
     fontSize: 16,
     color: textColor,
