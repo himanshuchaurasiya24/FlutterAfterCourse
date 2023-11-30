@@ -4,15 +4,15 @@ import 'package:booktickets/widgets/thick_container.dart';
 import 'package:flutter/material.dart';
 
 class TicketView extends StatelessWidget {
-  const TicketView({super.key});
-
+  const TicketView({super.key, required this.ticket});
+  final Map<String, dynamic> ticket;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: AppLayout.getSize(context).width,
+      width: AppLayout.getSize(context).width * 0.85,
       height: 200,
       child: Container(
-        margin: const EdgeInsets.only(left: 16),
+        margin: const EdgeInsets.only(right: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -31,7 +31,7 @@ class TicketView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'NYC',
+                        ticket['from']['code'],
                         style:
                             Style.headlineStyle3.copyWith(color: Colors.white),
                       ),
@@ -44,8 +44,6 @@ class TicketView extends StatelessWidget {
                               height: 24,
                               child: LayoutBuilder(
                                 builder: (context, constraints) {
-                                  debugPrint(
-                                      'the width is ${constraints.constrainWidth()}');
                                   return Flex(
                                     direction: Axis.horizontal,
                                     mainAxisAlignment:
@@ -81,7 +79,7 @@ class TicketView extends StatelessWidget {
                       const ThickContainer(),
                       const Spacer(),
                       Text(
-                        'LDN',
+                        ticket['to']['code'],
                         style:
                             Style.headlineStyle3.copyWith(color: Colors.white),
                       ),
@@ -96,13 +94,13 @@ class TicketView extends StatelessWidget {
                       SizedBox(
                         width: 100,
                         child: Text(
-                          'New York',
+                          ticket['from']['name'],
                           style: Style.headlineStyle4
                               .copyWith(color: Colors.white),
                         ),
                       ),
                       Text(
-                        '8H 30M',
+                        ticket['flying_time'],
                         style: Style.headlineStyle4.copyWith(
                           color: Colors.white,
                         ),
@@ -110,7 +108,7 @@ class TicketView extends StatelessWidget {
                       SizedBox(
                         width: 100,
                         child: Text(
-                          'London',
+                          ticket['to']['name'],
                           textAlign: TextAlign.end,
                           style: Style.headlineStyle4.copyWith(
                             color: Colors.white,
@@ -180,6 +178,80 @@ class TicketView extends StatelessWidget {
                 ],
               ),
             ),
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 16, top: 10, right: 16, bottom: 16),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(21),
+                  bottomRight: Radius.circular(21),
+                ),
+                color: Style.orangeColor,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            ticket['date'],
+                            style: Style.headlineStyle3
+                                .copyWith(color: Colors.white),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'DATE',
+                            style: Style.headlineStyle4
+                                .copyWith(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            ticket['departure_time'],
+                            style: Style.headlineStyle3
+                                .copyWith(color: Colors.white),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Departure time',
+                            style: Style.headlineStyle4
+                                .copyWith(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            ticket['number'].toString(),
+                            style: Style.headlineStyle3
+                                .copyWith(color: Colors.white),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Number',
+                            style: Style.headlineStyle4
+                                .copyWith(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
