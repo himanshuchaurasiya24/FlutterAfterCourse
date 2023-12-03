@@ -2,6 +2,7 @@ import 'package:booktickets/screens/hotel_screen.dart';
 import 'package:booktickets/screens/ticket_view.dart';
 import 'package:booktickets/utils/app_info_list.dart';
 import 'package:booktickets/utils/app_style.dart';
+import 'package:booktickets/widgets/double_text_widget.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -79,23 +80,8 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(
                   height: 25,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Upcoming Flights',
-                      style: Style.headlineStyle1,
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        'View All',
-                        style:
-                            Style.textStyle.copyWith(color: Style.primaryColor),
-                      ),
-                    ),
-                  ],
-                )
+                const DoubleTextWidget(
+                    bigText: 'Upcoming Flight', smallText: 'View All'),
               ],
             ),
           ),
@@ -116,23 +102,11 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Hotels',
-                  style: Style.headlineStyle1,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    'View All',
-                    style: Style.textStyle.copyWith(color: Style.primaryColor),
-                  ),
-                ),
-              ],
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: DoubleTextWidget(
+              bigText: 'Hotels',
+              smallText: 'View All',
             ),
           ),
           const SizedBox(
