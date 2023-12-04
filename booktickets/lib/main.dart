@@ -2,7 +2,7 @@ import 'package:booktickets/screens/bottom_bar.dart';
 import 'package:booktickets/utils/app_style.dart';
 import 'package:flutter/material.dart';
 
-// video at 04:25:44
+// video at 04:46:15
 void main() {
   runApp(const MyApp());
 }

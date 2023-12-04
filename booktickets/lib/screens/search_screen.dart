@@ -1,5 +1,6 @@
 import 'package:booktickets/utils/app_layout.dart';
 import 'package:booktickets/utils/app_style.dart';
+import 'package:booktickets/widgets/app_ticket_tab.dart';
 import 'package:booktickets/widgets/double_text_widget.dart';
 import 'package:booktickets/widgets/icon_text_widget.dart';
 import 'package:flutter/material.dart';
@@ -25,45 +26,9 @@ class SearchScreen extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          FittedBox(
-            child: Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: const Color(0xfff4f6fd),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                    width: size.width * 0.44,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                          bottomLeft: Radius.circular(50)),
-                      color: Colors.white,
-                    ),
-                    child: const Center(child: Text('Airline Tickets')),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                    width: size.width * 0.44,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(50),
-                          bottomRight: Radius.circular(50)),
-                      color: Colors.transparent,
-                    ),
-                    child: const Center(child: Text('Hotels')),
-                  ),
-                ],
-              ),
-            ),
+          const AppTicketTab(
+            firstTab: 'Airline Tickets',
+            secondTab: 'Hotels',
           ),
           const SizedBox(
             height: 25,
@@ -110,7 +75,7 @@ class SearchScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                height: 400,
+                height: 420,
                 width: size.width * 0.48,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -147,9 +112,6 @@ class SearchScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              // SizedBox(
-              //   width: size.width * 0.12,
-              // ),
               Column(
                 children: [
                   Stack(
@@ -158,7 +120,7 @@ class SearchScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 15),
                         width: size.width * 0.48,
-                        height: 190,
+                        height: 200,
                         decoration: BoxDecoration(
                           color: const Color(0xff3ab8b8),
                           borderRadius: BorderRadius.circular(18),
@@ -208,7 +170,7 @@ class SearchScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 15),
                     width: size.width * 0.48,
-                    height: 190,
+                    height: 200,
                     decoration: BoxDecoration(
                       color: const Color(0xffec6545),
                       borderRadius: BorderRadius.circular(18),

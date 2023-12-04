@@ -4,8 +4,9 @@ import 'package:booktickets/widgets/thick_container.dart';
 import 'package:flutter/material.dart';
 
 class TicketView extends StatelessWidget {
-  const TicketView({super.key, required this.ticket});
+  const TicketView({super.key, required this.ticket, this.isColor});
   final Map<String, dynamic> ticket;
+  final bool? isColor;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -18,9 +19,9 @@ class TicketView extends StatelessWidget {
           children: [
             // for blue part of the ticket,
             Container(
-              decoration: const BoxDecoration(
-                color: Color(0xff526799),
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: isColor == null ? const Color(0xff526799) : Colors.white,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(21),
                   topRight: Radius.circular(21),
                 ),
@@ -32,11 +33,14 @@ class TicketView extends StatelessWidget {
                     children: [
                       Text(
                         ticket['from']['code'],
-                        style:
-                            Style.headlineStyle3.copyWith(color: Colors.white),
+                        style: isColor == null
+                            ? Style.headlineStyle3.copyWith(color: Colors.white)
+                            : Style.headlineStyle3,
                       ),
                       const Spacer(),
-                      const ThickContainer(),
+                      const ThickContainer(
+                        isColor: true,
+                      ),
                       Expanded(
                         child: Stack(
                           children: [
@@ -51,12 +55,14 @@ class TicketView extends StatelessWidget {
                                     children: List.generate(
                                       (constraints.constrainWidth() / 6)
                                           .floor(),
-                                      (index) => const SizedBox(
+                                      (index) => SizedBox(
                                         height: 1,
                                         width: 3,
                                         child: DecoratedBox(
                                           decoration: BoxDecoration(
-                                              color: Colors.white),
+                                              color: isColor == null
+                                                  ? Colors.white
+                                                  : Colors.grey.shade300),
                                         ),
                                       ),
                                     ),
@@ -67,16 +73,18 @@ class TicketView extends StatelessWidget {
                             Center(
                               child: Transform.rotate(
                                 angle: 1.5,
-                                child: const Icon(
-                                  Icons.local_airport_rounded,
-                                  color: Colors.white,
-                                ),
+                                child: Icon(Icons.local_airport_rounded,
+                                    color: isColor == null
+                                        ? Colors.white
+                                        : const Color(0xff8accf7)),
                               ),
                             )
                           ],
                         ),
                       ),
-                      const ThickContainer(),
+                      const ThickContainer(
+                        isColor: true,
+                      ),
                       const Spacer(),
                       Text(
                         ticket['to']['code'],
