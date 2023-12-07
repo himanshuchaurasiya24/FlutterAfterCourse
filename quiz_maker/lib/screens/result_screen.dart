@@ -54,62 +54,250 @@ class _ResultScreenState extends State<ResultScreen> {
                       wrongAnswer++;
                     }
                   }
-                  return Column(
-                    children: [
-                      Text(
-                          'Number of correct answer: ${correctAnswer.toString()}'),
-                      Text('Number of wrong answer: ${wrongAnswer.toString()}'),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: questionData.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: Column(
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Correct answer: ',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.green[200],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.green[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  correctAnswer.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Wrong answer: ',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.red[200],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.red[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  wrongAnswer.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: questionData.length,
+                            itemBuilder: (context, index) {
+                              return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '${index + 1} ${questionData[index].question}',
-                                    style: const TextStyle(
-                                        fontSize: 60, color: Colors.blue),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue[200],
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            '${index + 1}',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          questionData[index].question,
+                                          maxLines: 4,
+                                          style: TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.blue[200],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
                                   questionData[index].correctOption ==
                                           widget.givenAnswers[index]
-                                      ? Text(
-                                          questionData[index].correctOption,
-                                          style: const TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 35),
+                                      ? Row(
+                                          children: [
+                                            Container(
+                                              height: 50,
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                color: Colors.green[200],
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: const Center(
+                                                  child: Icon(Icons.check)),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                questionData[index]
+                                                    .correctOption,
+                                                maxLines: 4,
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                    fontSize: 30,
+                                                    color: Colors.green[200],
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            )
+                                          ],
                                         )
                                       : Column(
                                           children: [
-                                            Text(
-                                              widget.givenAnswers[index],
-                                              style: TextStyle(
-                                                color: questionData[index]
-                                                            .correctOption ==
-                                                        widget
-                                                            .givenAnswers[index]
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                                fontSize: 35,
-                                              ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.green[200],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: const Center(
+                                                      child: Icon(Icons.check)),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    questionData[index]
+                                                        .correctOption,
+                                                    maxLines: 4,
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                        fontSize: 30,
+                                                        color:
+                                                            Colors.green[200],
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Text(
-                                              questionData[index].correctOption,
-                                              style: const TextStyle(
-                                                  fontSize: 35,
-                                                  color: Colors.green),
+                                            const SizedBox(
+                                              height: 10,
                                             ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red[200],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: const Center(
+                                                      child: Text(
+                                                    'X',
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  )),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    widget.givenAnswers[index],
+                                                    maxLines: 4,
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      fontSize: 30,
+                                                      color: Colors.red[200],
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )
                                           ],
-                                        )
+                                        ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
                                 ],
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 }
               }

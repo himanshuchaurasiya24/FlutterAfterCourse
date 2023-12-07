@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:quiz_maker/database/database.dart';
 import 'package:quiz_maker/screens/question_list_screen.dart';
 import 'package:quiz_maker/screens/test_screen.dart';
+import 'package:quiz_maker/utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,8 +21,12 @@ class _HomeScreenState extends State<HomeScreen> {
         // we use `builder` to obtain a new `BuildContext` that has access to the provider
         builder: (context, child) {
           return Scaffold(
+            backgroundColor: Style.bgColor,
             appBar: AppBar(
-              title: const Text('Quiz List'),
+              backgroundColor: Style.bgColor,
+              title: const Text(
+                'Quiz List',
+              ),
               centerTitle: true,
             ),
             floatingActionButton: FloatingActionButton.extended(
@@ -36,19 +41,23 @@ class _HomeScreenState extends State<HomeScreen> {
               label: const Text('Show Questions'),
             ),
             body: Center(
-              child: TextButton(
-                onPressed: () {
-                  // start quiz screen here...
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const TestScreen();
-                      },
-                    ),
-                  );
-                },
-                child: const Text('Start Quiz'),
+              child: SizedBox(
+                height: 60,
+                width: 200,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const TestScreen();
+                        },
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.question_answer),
+                  label: const Text('Start Quiz'),
+                ),
               ),
             ),
           );

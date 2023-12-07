@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_maker/database/database.dart';
 import 'package:quiz_maker/option_maker.dart';
 import 'package:quiz_maker/screens/result_screen.dart';
+import 'package:quiz_maker/utils/colors.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});
@@ -22,9 +25,18 @@ class _TestScreenState extends State<TestScreen> {
   late AppDatabase database;
   List<String> answers = [];
   List<String> options = [];
+  List<String> abcd = ['A', 'B', 'C', 'D'];
+  List<Color> optionColor = [
+    Colors.purple[200]!,
+    Colors.indigo[300]!,
+    Colors.yellow[900]!,
+    Colors.teal,
+  ];
 
   @override
   Widget build(BuildContext context) {
+    var random = Random();
+    int randomNumber = random.nextInt(3);
     database = Provider.of<AppDatabase>(context);
     return Scaffold(
       appBar: AppBar(
@@ -54,18 +66,61 @@ class _TestScreenState extends State<TestScreen> {
                   questionList[counter].fourthOption
                 ]).getShuffledAnswers();
                 options = optionUnshuffled;
-                return Padding(
+                return Container(
                   padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Style.bgColor,
+                    borderRadius: BorderRadius.circular(21),
+                  ),
                   child: Column(
                     children: [
-                      Text(
-                        '${counter + 1}. ${questionList[counter].question}',
-                        style: const TextStyle(fontSize: 60),
+                      const SizedBox(
+                        height: 150,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            height: 70,
+                            width: 70,
+                            decoration: BoxDecoration(
+                              color: Colors.blue[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${counter + 1}',
+                                style: const TextStyle(
+                                  fontSize: 50,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Text(
+                              questionList[counter].question,
+                              maxLines: 4,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.blue[200],
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                       Expanded(
                         child: ListView.builder(
                           itemCount: options.length,
                           itemBuilder: (context, index) {
+                            randomNumber = random.nextInt(4);
                             return GestureDetector(
                               onTap: () {
                                 answers.add(options[index]);
@@ -85,15 +140,49 @@ class _TestScreenState extends State<TestScreen> {
                                   );
                                 }
                               },
-                              child: Container(
-                                height: 60,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Text(
-                                  options[index],
-                                ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          color: optionColor[randomNumber],
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            abcd[index],
+                                            style: const TextStyle(
+                                              fontSize: 32,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          options[index],
+                                          maxLines: 4,
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.blue[200],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  )
+                                ],
                               ),
                             );
                           },

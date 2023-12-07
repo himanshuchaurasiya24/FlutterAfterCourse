@@ -4,6 +4,7 @@ import 'package:quiz_maker/database/database.dart';
 import 'package:quiz_maker/screens/add_question_screen.dart';
 import 'package:quiz_maker/screens/question_details_screen.dart';
 import 'package:drift/drift.dart' as dr;
+import 'package:quiz_maker/utils/colors.dart';
 
 class QuestionListScreen extends StatefulWidget {
   const QuestionListScreen({super.key});
@@ -21,11 +22,12 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('details screen build');
     database = Provider.of<AppDatabase>(context);
 
     return Scaffold(
+      backgroundColor: Style.bgColor,
       appBar: AppBar(
+        backgroundColor: Style.bgColor,
         title: const Text('Question List'),
         centerTitle: true,
       ),
@@ -63,12 +65,6 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        // navigate to details screen
-                        debugPrint(questionList[index].question);
-                        debugPrint(questionList[index].correctOption);
-                        debugPrint(questionList[index].secondOption);
-                        debugPrint(questionList[index].thirdOption);
-                        debugPrint(questionList[index].fourthOption);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -103,70 +99,251 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(81, 121, 152, 238),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${index + 1}. ${questionList[index].question}',
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.blue,
-                                ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '${index + 1}',
+                                        style: const TextStyle(
+                                          fontSize: 32,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      questionList[index].question,
+                                      maxLines: 4,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.blue[200],
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                ],
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 25),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${('a')}. ${questionList[index].correctOption}',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.green,
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.green[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'A',
+                                        style: TextStyle(
+                                            fontSize: 32,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      questionList[index].correctOption,
+                                      maxLines: 4,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.green[200]),
                                     ),
-                                    Text(
-                                      '${('b')}. ${questionList[index].secondOption}',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.red,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'B',
+                                        style: TextStyle(
+                                            fontSize: 32,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      '${('c')}. ${questionList[index].thirdOption}',
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      questionList[index].secondOption,
+                                      maxLines: 4,
+                                      textAlign: TextAlign.start,
                                       style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.red,
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'C',
+                                        style: TextStyle(
+                                            fontSize: 32,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      '${('d')}. ${questionList[index].fourthOption}',
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      questionList[index].thirdOption,
+                                      maxLines: 4,
+                                      textAlign: TextAlign.start,
                                       style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.red,
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'D',
+                                        style: TextStyle(
+                                            fontSize: 32,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      questionList[index].fourthOption,
+                                      maxLines: 4,
+                                      textAlign: TextAlign.start,
+                                      style: const TextStyle(
+                                          fontSize: 20, color: Colors.black),
                                     ),
-                                  ],
-                                ),
-                              )
+                                  )
+                                ],
+                              ),
+                              // Text(
+                              //   '${index + 1}. ${questionList[index].question}',
+                              //   style: const TextStyle(
+                              //     fontSize: 30,
+                              //     color: Colors.blue,
+                              //   ),
+                              // ),
+                              // const SizedBox(
+                              //   height: 10,
+                              // ),
+                              // Container(
+                              //   margin: const EdgeInsets.only(left: 25),
+                              //   child: Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       Text(
+                              //         '${('a')}. ${questionList[index].correctOption}',
+                              //         style: const TextStyle(
+                              //           fontSize: 18,
+                              //           color: Colors.green,
+                              //         ),
+                              //       ),
+                              //       const SizedBox(
+                              //         height: 10,
+                              //       ),
+                              //       Text(
+                              //         '${('b')}. ${questionList[index].secondOption}',
+                              //         style: const TextStyle(
+                              //           fontSize: 18,
+                              //           color: Colors.red,
+                              //         ),
+                              //       ),
+                              //       const SizedBox(
+                              //         height: 10,
+                              //       ),
+                              //       Text(
+                              //         '${('c')}. ${questionList[index].thirdOption}',
+                              //         style: const TextStyle(
+                              //           fontSize: 18,
+                              //           color: Colors.red,
+                              //         ),
+                              //       ),
+                              //       const SizedBox(
+                              //         height: 10,
+                              //       ),
+                              //       Text(
+                              //         '${('d')}. ${questionList[index].fourthOption}',
+                              //         style: const TextStyle(
+                              //           fontSize: 18,
+                              //           color: Colors.red,
+                              //         ),
+                              //       ),
+                              //       const SizedBox(
+                              //         height: 10,
+                              //       ),
+                              //     ],
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
