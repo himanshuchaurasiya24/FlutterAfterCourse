@@ -93,20 +93,34 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Stack(
-              children: [
-                Container(
-                  height: 100,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Style.primaryColor,
-                    borderRadius: BorderRadius.circular(20),
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(left: 20),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Style.primaryColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: -35,
+                    top: -40,
+                    child: Container(
+                      padding: const EdgeInsets.all(30),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 18,
+                            color: const Color.fromARGB(255, 3, 68, 121),
+                          ),
+                          color: Colors.transparent),
+                    ),
                   ),
-                  child: Row(
+                  Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Style.bgColor,
@@ -137,22 +151,8 @@ class ProfileScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                ),
-                Positioned(
-                  right: -35,
-                  top: -40,
-                  child: Container(
-                    padding: const EdgeInsets.all(30),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 18,
-                          color: const Color.fromARGB(255, 3, 68, 121),
-                        ),
-                        color: Colors.transparent),
-                  ),
-                )
-              ],
+                ],
+              ),
             ),
             const SizedBox(
               height: 10,

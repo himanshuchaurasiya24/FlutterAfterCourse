@@ -112,6 +112,9 @@ class SearchScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(
+                width: 10,
+              ),
               Column(
                 children: [
                   Stack(
@@ -119,7 +122,7 @@ class SearchScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 15),
-                        width: size.width * 0.48,
+                        width: size.width * 0.398,
                         height: 200,
                         decoration: BoxDecoration(
                           color: const Color(0xff3ab8b8),
@@ -169,7 +172,7 @@ class SearchScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 15),
-                    width: size.width * 0.48,
+                    width: size.width * 0.398,
                     height: 200,
                     decoration: BoxDecoration(
                       color: const Color(0xffec6545),
@@ -192,15 +195,15 @@ class SearchScreen extends StatelessWidget {
                           text: const TextSpan(children: [
                             TextSpan(
                               text: '😊',
-                              style: TextStyle(fontSize: 38),
+                              style: TextStyle(fontSize: 35),
                             ),
                             TextSpan(
                               text: '😍',
-                              style: TextStyle(fontSize: 38),
+                              style: TextStyle(fontSize: 35),
                             ),
                             TextSpan(
                               text: '🤩',
-                              style: TextStyle(fontSize: 38),
+                              style: TextStyle(fontSize: 35),
                             ),
                           ]),
                         ),
