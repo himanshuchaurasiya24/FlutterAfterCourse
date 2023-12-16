@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_by_ripples_code/counter_demo.dart';
 
 final nameProvider = Provider<String>((ref) {
   return 'Hello World';
 });
 final counterProvider = StateProvider<int>((ref) {
   return 0;
+});
+// stateNotifierProvider demo
+final stateNotifierProvider = StateNotifierProvider<CounterDemo, int>((ref) {
+  return CounterDemo();
 });
 void main() {
   runApp(
@@ -21,6 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -96,11 +102,65 @@ class MyApp extends StatelessWidget {
 // }
 
 // 4th method
+// class MyHomePage extends ConsumerWidget {
+//   const MyHomePage({super.key});
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final count = ref.watch(counterProvider);
+//     // to listen to the changes of the provider
+//     ref.listen(counterProvider, (previous, next) {
+//       if (next == 5) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(
+//             content: Text('the value has been increased to $next'),
+//           ),
+//         );
+//       }
+//     });
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('State Provider'),
+//         actions: [
+//           IconButton(
+//             onPressed: () {
+//               // to reset the value to starting value we have two approach
+//               // update method
+//               //
+//               // ref
+//               //     .read(counterProvider.notifier)
+//               //     .update((state) => state - state);
+//               //
+//               // ref.invalidate(counterProvider); // invalidate method will refresh only once if it is clicker multiple time;
+//               ref.refresh(counterProvider);
+//             },
+//             icon: const Icon(Icons.refresh),
+//           )
+//         ],
+//       ),
+//       body: Center(
+//         child: Text(
+//           count.toString(),
+//           style: const TextStyle(fontSize: 30),
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton.extended(
+//         onPressed: () {
+//           //antoher approach is in the appbar section using the update method;
+//           ref.read(counterProvider.notifier).state++;
+//         },
+//         label: const Icon(Icons.add_outlined),
+//       ),
+//     );
+//   }
+// }
+//
+//
+// stateNotifierProvider
 class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(counterProvider);
+    final counter = ref.watch(stateNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('State Provider'),
@@ -113,13 +173,13 @@ class MyHomePage extends ConsumerWidget {
       ),
       body: Center(
         child: Text(
-          count.toString(),
+          counter.toString(),
           style: const TextStyle(fontSize: 30),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          ref.read(counterProvider.notifier).state++;
+          ref.read(stateNotifierProvider.notifier).increment();
         },
         label: const Icon(Icons.add_outlined),
       ),
