@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '375273354267',
     projectId: 'dummy-925c9',
     authDomain: 'dummy-925c9.firebaseapp.com',
+    databaseURL: 'https://dummy-925c9-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-925c9.appspot.com',
   );
 
@@ -57,6 +58,7 @@ class DefaultFirebaseOptions {
     appId: '1:375273354267:android:a0e357f01597e10f86b4be',
     messagingSenderId: '375273354267',
     projectId: 'dummy-925c9',
+    databaseURL: 'https://dummy-925c9-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-925c9.appspot.com',
   );
 
@@ -65,6 +67,7 @@ class DefaultFirebaseOptions {
     appId: '1:375273354267:ios:d60face9292aef8e86b4be',
     messagingSenderId: '375273354267',
     projectId: 'dummy-925c9',
+    databaseURL: 'https://dummy-925c9-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-925c9.appspot.com',
     iosBundleId: 'com.example.ttbFlutterFirebase',
   );
@@ -74,6 +77,7 @@ class DefaultFirebaseOptions {
     appId: '1:375273354267:ios:e596834d89d8d57286b4be',
     messagingSenderId: '375273354267',
     projectId: 'dummy-925c9',
+    databaseURL: 'https://dummy-925c9-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-925c9.appspot.com',
     iosBundleId: 'com.example.ttbFlutterFirebase.RunnerTests',
   );

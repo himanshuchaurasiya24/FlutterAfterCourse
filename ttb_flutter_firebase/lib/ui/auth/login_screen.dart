@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ttb_flutter_firebase/ui/auth/sign_up_screen.dart';
+import 'package:ttb_flutter_firebase/ui/posts/post_screen.dart';
+import 'package:ttb_flutter_firebase/utils/utilities.dart';
 import 'package:ttb_flutter_firebase/widgets/round_button.dart';
 import 'package:ttb_flutter_firebase/widgets/text_form_widget.dart';
 
@@ -15,11 +18,49 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formField = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+  bool isLoading = false;
   @override
   void dispose() {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  void logIn() {
+    setState(() {
+      isLoading = true;
+    });
+    _auth
+        .signInWithEmailAndPassword(
+      email: emailController.text.toString(),
+      password: passwordController.text.toString(),
+    )
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+      Utils().toastMessage(
+        value.user!.email.toString(),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return PostScreen(
+              email: value.user!.email.toString(),
+            );
+          },
+        ),
+      );
+    }).onError((error, stackTrace) {
+      setState(() {
+        isLoading = false;
+      });
+      Utils().toastMessage(
+        error.toString(),
+      );
+    });
   }
 
   @override
@@ -63,8 +104,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 RoundButton(
                   title: 'Login',
+                  isLoading: isLoading,
                   onTap: () {
-                    if (_formField.currentState!.validate()) {}
+                    if (_formField.currentState!.validate()) {
+                      logIn();
+                    }
                   },
                 ),
                 const SizedBox(
