@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ttb_flutter_firebase/ui/auth/sign_up_screen.dart';
+import 'package:ttb_flutter_firebase/ui/firestore/firestore_list_screen.dart';
 import 'package:ttb_flutter_firebase/ui/posts/post_screen.dart';
 import 'package:ttb_flutter_firebase/utils/utilities.dart';
 import 'package:ttb_flutter_firebase/widgets/round_button.dart';
@@ -47,9 +48,10 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return PostScreen(
-              email: value.user!.email.toString(),
-            );
+            // return PostScreen(
+            //   email: value.user!.email.toString(),
+            // );
+            return const FirestoreScreen();
           },
         ),
       );
