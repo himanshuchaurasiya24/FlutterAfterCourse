@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ttb_flutter_firebase/ui/auth/login_screen.dart';
 import 'package:ttb_flutter_firebase/ui/firestore/firestore_list_screen.dart';
 import 'package:ttb_flutter_firebase/ui/posts/post_screen.dart';
+import 'package:ttb_flutter_firebase/ui/upload_images.dart';
 
 class SplashServices {
   void isLogin(BuildContext context) {
@@ -19,7 +20,8 @@ class SplashServices {
               // return PostScreen(
               //   email: user.email.toString(),
               // );
-              return const FirestoreScreen();
+              // return const FirestoreScreen();
+              return const UploadImage();
             },
           ),
         );
@@ -31,6 +33,7 @@ class SplashServices {
           MaterialPageRoute(
             builder: (context) {
               return const LoginScreen();
+              // return const UploadImage();
             },
           ),
         );

@@ -58,6 +58,7 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                 //   'id': widget.id,
                 //   'textContent': titleController.text
                 // })
+
                 databaseRef.child(widget.id).update({
                   'id': widget.id,
                   'textContent': titleController.text

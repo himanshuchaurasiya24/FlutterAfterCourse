@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ttb_flutter_firebase/firebase_options.dart';
 import 'package:ttb_flutter_firebase/ui/splash_screen.dart';
 
+// 22:19
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
