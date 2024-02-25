@@ -1,0 +1,104 @@
+
+use unsigned to allocate the not required memory to increase the range of the datatype 
+like if we use tinyint it will range from -127 to 128 but if we write unsigned then its range will be increased to 0 to 255;
+
+this prevents us from getting the error in run time
+create database if not exists college;
+drop database if exists students; 
+
+this command will only execute if there is any database of the same name;
+
+in sql we generally use this command for inserting the data
+
+insert into student values (1, 'Himanshu');
+
+but if we dont know the order of the data to be given then this can give us an error;
+so to avoid this we can use the following command by specifying the position of the column like
+
+insert into student 
+(rollno, name)
+values
+(3, 'Anuj'),
+(4, 'Ankit');
+
+
+in a table only one column can be primary key which can not be null and not two;
+a column in which a primary key is there becomes a foriegn key in the other table;
+id int default 25000 // sets default value for the given column write the below syntax for the insertion
+
+
+insert into temp1 (id) values(3);
+
+
+
+2nd way to make primary key is by writing 
+PRIMARY KEY(id),
+PRIMARY KEY(id, age) // here the combination of the age and id will never be the two id can be repeated or the age can be repeated in a different row but not the combination of these two;
+
+foreign key declaration
+
+create table temp1(
+id int unique,
+foreign key(id) references customer(id)
+);
+here the 2nd table name is customer which has a column named id;
+
+
+to limit or to do some checks before adding the data in the database;
+
+create table city(
+id int primary key,
+city varchar(50),
+age int ,
+constraint age_check check (age>=18 and city='delhi')
+);
+
+or we can do the checks after declaring the name of the variable like this
+population int check(population>=100),
+
+select distinct city from student; // this does not repeat the same entry in any given column;
+
+
+
+select * from student where city='delhi' and  marks>10 and rollno >104; // multiple clause;
+
+select * from student where city='delhi' or  marks>20 or rollno >104;// watches for only one each condition to get true;
+
+select * from student where marks between 80 and 90; // 80 and 90 are inclusive;
+select * from student where city in ('delhi', 'mumbai');
+select * from student where city not in ('delhi', 'mumbai'); // finds the data where city name is not equal to the given list;
+select * from student order by name desc;// descending order;
+
+aggregate functions in sql are-> count(), sum(), max(), avg(), min()
+
+select min(marks) from student; displays min marks of student in the list;
+select city, count(rollno) from student group by city; this show
+here in city it can be used to group by city and name as well but we have to write it on both the placs like
+select city,name, count(rollno) from student group by city, name;
+
+1:37 
+
+void windowsInit() {
+  // Look for the bundle sqlite3.dll while in development
+  // otherwise make sure to copy the dll along with the executable
+  var path = findWindowsDllPath();
+  if (path != null) {
+    open.overrideFor(OperatingSystem.windows, () {
+      // devPrint('loading $path');
+      try {
+        return DynamicLibrary.open(path);
+      } catch (e) {
+        stderr.writeln('Failed to load sqlite3.dll at $path');
+        rethrow;
+      }
+    });
+  }
+
+  // Force an open in the main isolate
+  // Loading from an isolate seems to break on windows
+  sqlite3.openInMemory().dispose();
+}
+
+
+
+

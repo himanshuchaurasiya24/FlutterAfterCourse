@@ -1,0 +1,3 @@
+for simple  things like bool string and int we will use stateProvider but for more complex things like list<String> or list<Map> we will use stateNotifier;
+ref.watch() is to watch the data and build the ui whenever it is required
+ref.read() allows us to perform operations like add delete update;
