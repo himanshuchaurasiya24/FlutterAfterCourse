@@ -1,3 +1,78 @@
 for simple  things like bool string and int we will use stateProvider but for more complex things like list<String> or list<Map> we will use stateNotifier;
 ref.watch() is to watch the data and build the ui whenever it is required
 ref.read() allows us to perform operations like add delete update;
+final isRedProvider = Provier<bool>((ref)=>true);
+final selectedButtonProvider = StateProvider((ref)=>'');
+provider value can be created outside but it can not be changed outside;
+whereas stateProvider value can be changed as well as changed outside;
+to initialise a class or constructor with some data we can write it like that:
+class NumberNotifier extends StateNotifier<List<String>> {
+  NumberNotifier()
+      : super(
+          ['nummber 12', 'number 30'],
+        );
+void add(String number) {
+    state = [...state, number];
+  }
+
+  void remove(String number) {
+    state = [
+      ...state.where(
+        (element) => element != number,
+      )
+    ];
+  }
+
+  void update(String oldNumber, String newNumber) {
+    final updatedList = <String>[];
+    for (int i = 0; i < state.length; i++) {
+      if (state[i] == oldNumber) {
+        updatedList.add(newNumber);
+      } else {
+        updatedList.add(state[i]);
+      }
+    }
+    state = updatedList;
+    debugPrint('updated');
+  }
+}
+to use the state notifier class we have to create another type of provider that is statenotifierprovider
+final numberProvider =
+    StateNotifierProvider<NumberNotifier, List<String>>((ref) {
+  return NumberNotifier();
+});
+
+to access this or to change the data
+we can write it like 
+ref.read(numberProvider.notifier).add();
+ref.read(numberProvider.notifier).remove();
+ref.read(numberProvider.notifier).update();
+
+if we extend a class with stateNotifier then we hav to provide the stateNotifier with a type and then the state is available which we can use to call the methods of the declared class like below code:
+
+class NavNotifier extends StateNotifier<NavStates> {
+  NavNotifier() : super(const NavStates());
+  void onIndexChanged(int index) {
+    state = state.copyWith(index: index);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

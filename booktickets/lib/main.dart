@@ -1,10 +1,15 @@
 import 'package:booktickets/screens/bottom_bar.dart';
 import 'package:booktickets/utils/app_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // video completed
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
