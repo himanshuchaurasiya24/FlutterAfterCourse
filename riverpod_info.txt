@@ -56,7 +56,30 @@ class NavNotifier extends StateNotifier<NavStates> {
     state = state.copyWith(index: index);
   }
 }
+// Flutter Hooks
+class HomePage extends HookWidget {
+  const HomePage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    final counter = useState(0); // this has to be inside of the build method of a widget;
+    debugPrint('rebuilt');
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flutter Hooks'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text(
+          counter.value.toString(),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        counter.value++;
+      }),
+    );
+  }
+}
 
 
 
